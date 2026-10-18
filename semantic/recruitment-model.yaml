@@ -1,0 +1,41 @@
+model:
+  name: recruitment
+  version: 1.0
+  owner: recruiting-operations
+  freshness: daily_at_08_00_utc
+
+entities:
+  candidate:
+    primary_key: candidate_id
+    aliases: [candidate, applicant, person]
+  application:
+    primary_key: application_id
+    aliases: [application, submission]
+  job:
+    primary_key: job_id
+    aliases: [job, role, position, opening]
+  interview_offer:
+    primary_key: application_id
+    aliases: [interview, offer, hire]
+
+relationships:
+  - { from: application.candidate_id, to: candidate.candidate_id, type: many_to_one }
+  - { from: application.job_id, to: job.job_id, type: many_to_one }
+  - { from: interview_offer.application_id, to: application.application_id, type: one_to_one }
+
+dimensions: [job_title, department, location, source, stage, applied_at, applied_month]
+
+metrics:
+  candidate_count: { label: Candidate count, expression: count_distinct(candidate_id) }
+  application_count: { label: Application count, expression: count_distinct(application_id) }
+  average_time_to_hire: { label: Average time to hire, expression: "avg(date_diff(day, applied_at, hired_at))" }
+  stage_conversion_rate: { label: Stage conversion rate, expression: candidates_at_stage / candidates_at_prior_stage }
+  offer_acceptance_rate: { label: Offer acceptance rate, expression: accepted_offers / total_offers }
+  candidate_to_hire_rate: { label: Candidate-to-hire rate, expression: hired_candidates / candidate_count }
+  hire_count: { label: Hire count, expression: count_distinct(case_when(stage = 'Hired', candidate_id)) }
+  active_pipeline_count: { label: Active pipeline count, expression: count_distinct(case_when(stage in ['Screened', 'Interviewed', 'Offered'], candidate_id)) }
+
+policy:
+  allow_only_declared_metrics: true
+  allow_only_declared_relationships: true
+  pii_fields_exposed: false
