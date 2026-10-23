@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowLeft, CalendarClock, Network } from 'lucide-react';
-import { CashTimingScenarioDemo } from '@/components/scenario-demo/CashTimingScenarioDemo';
+import { ScenarioResearchView } from '@/components/scenario-demo/ScenarioResearchView';
 
 export default function ScenarioDemoPage() {
   return (
@@ -29,17 +29,17 @@ export default function ScenarioDemoPage() {
         </nav>
         <div className="os-sidebar-foot">
           <span>Research prototype</span>
-          <small>Scenario Planning v0.1</small>
+          <small>Isolated scenario families</small>
         </div>
       </aside>
       <div className="os-stage">
         <header className="os-header">
           <div className="os-header-title">
             <div>
-              <strong>Scenario Planning v0.1</strong>
+              <strong>Scenario Planning</strong>
               <span className="od-badge">Research prototype</span>
             </div>
-            <small>Deterministic reimbursement timing scenario</small>
+            <small>Three isolated deterministic models — cash timing, revenue run-rate, and growth target</small>
           </div>
           <div className="os-header-actions">
             <Link href="/" className="od-back-link">
@@ -49,7 +49,7 @@ export default function ScenarioDemoPage() {
           </div>
         </header>
         <main className="os-main od-main">
-          <CashTimingScenarioDemo />
+          <ScenarioResearchView />
         </main>
       </div>
     </div>

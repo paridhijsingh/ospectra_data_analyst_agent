@@ -1,11 +1,15 @@
+'use client';
+
 import { CircleHelp } from 'lucide-react';
 import { compareCashTimingScenario } from '@/lib/cash-timing-scenario';
+import { ExplainerCard } from '@/components/explainers/ExplainerCard';
 import {
   delayedReimbursementFixture,
   formatUsd,
   scenarioDisplayCopy,
   scenarioResearchQuestion,
 } from '@/lib/cash-timing-scenario-demo';
+import { explainCashTimingComparison, explainCashTimingTimeline } from '@/lib/research-explainers';
 
 export function CashTimingScenarioDemo() {
   const result = compareCashTimingScenario(delayedReimbursementFixture);
@@ -52,13 +56,14 @@ export function CashTimingScenarioDemo() {
             <span>Shortfall</span>
             <strong>{formatUsd(result.scenarioShortfall)}</strong>
           </div>
-        </article>
-      </section>
+          </article>
+        </section>
+        <ExplainerCard explainer={explainCashTimingComparison(result)} />
 
       <section className="od-panel sd-timeline-panel">
         <div className="od-panel-head">
-          <strong>Why the result changes</strong>
-          <span>Oct 5 before cutoff · Oct 19 after cutoff</span>
+          <strong>Receipt timeline</strong>
+          <span>Dates relative to the obligation cutoff</span>
         </div>
         <div className="sd-rail" role="img" aria-label="Timeline from October 2 through October 19 showing Receipt B moving past the October 6 obligation">
           <div className="sd-rail-line" />
@@ -95,11 +100,8 @@ export function CashTimingScenarioDemo() {
             <span>+14 DAYS</span>
           </div>
         </div>
-        <p className="sd-timeline-caption">
-          Oct 5 is before the Oct 6 obligation, so Receipt B counts in baseline cash.
-          Oct 19 is after the obligation, so that $40K is excluded from scenario cash before the obligation.
-        </p>
       </section>
+        <ExplainerCard explainer={explainCashTimingTimeline(result, delayedReimbursementFixture)} />
 
       <div className="sd-change-strip">
         <strong>Only assumption changed</strong>
@@ -123,29 +125,11 @@ export function CashTimingScenarioDemo() {
         </table>
       </section>
 
-      <section className="od-panel sd-impact-compact">
-        <div className="od-panel-head">
-          <strong>Timing impact</strong>
-          <span>Not a loss — timing difference</span>
-        </div>
-        <p className="sd-impact-value">{formatUsd(result.timingDifference)}</p>
-        <p className="od-path-note">
-          $40,000 that was available before the Oct 6 obligation in the baseline is not available by that date in the delayed scenario.
-        </p>
-        <p className="sd-impact-shortfall">
-          Resulting scenario shortfall: <strong>{formatUsd(result.scenarioShortfall)}</strong>
-        </p>
-      </section>
-
       <section className="od-callout sd-callout-compact">
         <CircleHelp size={15} />
         <div>
-          <strong>Scenario analysis is not a prediction.</strong>
-          <p>
-            Results are deterministic outputs from explicit synthetic assumptions. They do not predict that a
-            reimbursement will be delayed or that OSpectra will experience this shortfall.
-          </p>
-          <p>Cash before obligation is measured before subtracting the obligation.</p>
+          <strong>Cash before obligation is measured before subtracting the obligation.</strong>
+          <p>Results are synthetic and deterministic, not a prediction of OSpectra cash.</p>
         </div>
       </section>
 
