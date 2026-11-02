@@ -67,37 +67,35 @@ export function CashTimingScenarioDemo() {
         </div>
         <div className="sd-rail" role="img" aria-label="Timeline from October 2 through October 19 showing Receipt B moving past the October 6 obligation">
           <div className="sd-rail-line" />
-          <div className="sd-rail-points">
-            <div className="sd-point">
-              <i />
-              <strong>Oct 2</strong>
-              <span>Receipt A</span>
-              <b>+$15K</b>
-            </div>
-            <div className="sd-point sd-point-baseline">
-              <i />
-              <strong>Oct 5</strong>
-              <span>Receipt B</span>
-              <b>+$40K</b>
-              <em>Baseline arrival</em>
-            </div>
-            <div className="sd-point sd-point-cutoff">
-              <i />
-              <strong>Oct 6</strong>
-              <span>Obligation</span>
-              <b>$70K</b>
-              <em>Cutoff</em>
-            </div>
-            <div className="sd-point sd-point-scenario">
-              <i />
-              <strong>Oct 19</strong>
-              <span>Receipt B</span>
-              <b>+$40K</b>
-              <em>Scenario arrival</em>
-            </div>
-          </div>
           <div className="sd-delay-bridge" aria-hidden="true">
             <span>+14 DAYS</span>
+          </div>
+          <div className="sd-point" style={{ left: '0%' }}>
+            <i />
+            <strong>Oct 2</strong>
+            <span>Receipt A</span>
+            <b>+$15K</b>
+          </div>
+          <div className="sd-point sd-point-baseline" style={{ left: '17.6%' }}>
+            <i />
+            <strong>Oct 5</strong>
+            <span>Receipt B</span>
+            <b>+$40K</b>
+            <em>Baseline arrival</em>
+          </div>
+          <div className="sd-point sd-point-cutoff" style={{ left: '23.5%' }}>
+            <i />
+            <strong>Oct 6</strong>
+            <span>Obligation</span>
+            <b>$70K</b>
+            <em>Cutoff</em>
+          </div>
+          <div className="sd-point sd-point-scenario" style={{ left: '100%' }}>
+            <i />
+            <strong>Oct 19</strong>
+            <span>Receipt B</span>
+            <b>+$40K</b>
+            <em>Scenario arrival</em>
           </div>
         </div>
       </section>
