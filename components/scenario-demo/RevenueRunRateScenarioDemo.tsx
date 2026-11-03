@@ -6,6 +6,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -163,6 +164,17 @@ export function RevenueRunRateScenarioDemo() {
                 labelFormatter={(year) => `Year ${Number(year).toFixed(2)}`}
               />
               <Legend />
+              <ReferenceLine
+                y={derived.censusPlateau}
+                stroke="#918b9c"
+                strokeDasharray="5 4"
+                label={{
+                  value: `plateau — ${formatCensus(derived.censusPlateau)} clients`,
+                  fill: '#746b82',
+                  fontSize: 11,
+                  position: 'insideTopRight',
+                }}
+              />
               <Line type="monotone" dataKey="n1Census" name={series[0].name} stroke={series[0].color} strokeWidth={2} dot={false} />
               <Line type="monotone" dataKey="n2Census" name={series[1].name} stroke={series[1].color} strokeWidth={3} dot={false} />
               <Line type="monotone" dataKey="n3Census" name={series[2].name} stroke={series[2].color} strokeWidth={2} dot={false} />

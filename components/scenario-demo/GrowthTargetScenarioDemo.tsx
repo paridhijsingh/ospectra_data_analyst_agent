@@ -7,6 +7,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceDot,
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
@@ -43,11 +44,7 @@ import {
   type GrowthTargetScenario,
 } from '@/lib/revenue-run-rate-target-demo';
 
-const FIXED = {
-  h: growthTargetReference.h,
-  p: growthTargetReference.p,
-  weeksPerYear: growthTargetReference.weeksPerYear,
-} as const;
+const WEEKS_PER_YEAR = growthTargetReference.weeksPerYear;
 
 const TARGET_OPTIONS = [
   { amount: 5_000_000, label: '$5M' },
@@ -72,6 +69,10 @@ const ADMISSIONS_MAX = 5;
 const ADMISSIONS_STEP = 0.1;
 const LIFETIME_MIN = 13;
 const LIFETIME_MAX = 208;
+const HOURS_MIN = 10;
+const HOURS_MAX = 40;
+const RATE_MIN = 25;
+const RATE_MAX = 50;
 const DIRECT_RATIO_MIN = 0;
 const DIRECT_RATIO_MAX = 1;
 const VARIABLE_RATIO_MIN = 0;
@@ -129,6 +130,16 @@ function clampLifetime(value: number): number {
   return Math.min(LIFETIME_MAX, Math.max(LIFETIME_MIN, Math.round(value)));
 }
 
+function clampHours(value: number): number {
+  if (!Number.isFinite(value) || value <= 0) return growthTargetReference.h;
+  return Math.min(HOURS_MAX, Math.max(HOURS_MIN, Math.round(value)));
+}
+
+function clampRate(value: number): number {
+  if (!Number.isFinite(value) || value <= 0) return growthTargetReference.p;
+  return Math.min(RATE_MAX, Math.max(RATE_MIN, Math.round(value)));
+}
+
 function clampRatio(value: number, min: number, max: number, fallback: number): number {
   if (!Number.isFinite(value)) return fallback;
   return Math.min(max, Math.max(min, value));
@@ -156,6 +167,8 @@ function buildScenario(
   isBaseline: boolean,
   params: {
     L: number;
+    h: number;
+    p: number;
     horizonWeeks: number;
     targetAnnualizedRunRate: number;
   },
@@ -163,8 +176,8 @@ function buildScenario(
   const result = projectRevenueRunRate({
     n,
     L: params.L,
-    h: FIXED.h,
-    p: FIXED.p,
+    h: params.h,
+    p: params.p,
     horizonWeeks: params.horizonWeeks,
   });
   return {
@@ -176,7 +189,7 @@ function buildScenario(
     analysis: analyzeRunRateTarget({
       result,
       targetAnnualizedRunRate: params.targetAnnualizedRunRate,
-      weeksPerYear: FIXED.weeksPerYear,
+      weeksPerYear: WEEKS_PER_YEAR,
     }),
   };
 }
@@ -209,11 +222,11 @@ function toInteractiveChartPoints(
     const week = current.trajectory[index];
     points.push({
       t: week.t,
-      year: week.t / FIXED.weeksPerYear,
-      currentAnnualized: week.revenue * FIXED.weeksPerYear,
-      n1Annualized: (byKey.n1?.[index]?.revenue ?? 0) * FIXED.weeksPerYear,
-      n2Annualized: (byKey.n2?.[index]?.revenue ?? 0) * FIXED.weeksPerYear,
-      n3Annualized: (byKey.n3?.[index]?.revenue ?? 0) * FIXED.weeksPerYear,
+      year: week.t / WEEKS_PER_YEAR,
+      currentAnnualized: week.revenue * WEEKS_PER_YEAR,
+      n1Annualized: (byKey.n1?.[index]?.revenue ?? 0) * WEEKS_PER_YEAR,
+      n2Annualized: (byKey.n2?.[index]?.revenue ?? 0) * WEEKS_PER_YEAR,
+      n3Annualized: (byKey.n3?.[index]?.revenue ?? 0) * WEEKS_PER_YEAR,
       target: targetAnnualizedRunRate,
     });
   };
@@ -242,7 +255,7 @@ function toCostChartPoints(costs: Pick<RunRateCostResult, 'trajectory'> | { traj
     const week = costs.trajectory[index];
     points.push({
       t: week.t,
-      year: week.t / FIXED.weeksPerYear,
+      year: week.t / WEEKS_PER_YEAR,
       weeklyRevenue: week.weeklyRevenue,
       totalModeledCost: week.totalModeledCost,
       modeledContribution: week.modeledContribution,
@@ -260,6 +273,8 @@ export function GrowthTargetScenarioDemo() {
   );
   const [n, setN] = useState<number>(growthTargetReference.referenceAdmissions);
   const [lifetimeWeeks, setLifetimeWeeks] = useState<number>(growthTargetReference.L);
+  const [serviceHours, setServiceHours] = useState<number>(growthTargetReference.h);
+  const [billingRate, setBillingRate] = useState<number>(growthTargetReference.p);
   const [horizonWeeks, setHorizonWeeks] = useState<number>(growthTargetReference.horizonWeeks);
   const [directServiceCostRatio, setDirectServiceCostRatio] = useState<number>(
     defaultRunRateCostAssumptions.directServiceCostRatio,
@@ -279,8 +294,14 @@ export function GrowthTargetScenarioDemo() {
   const [branch2Capacity, setBranch2Capacity] = useState(100);
 
   const modelParams = useMemo(
-    () => ({ L: lifetimeWeeks, horizonWeeks, targetAnnualizedRunRate }),
-    [lifetimeWeeks, horizonWeeks, targetAnnualizedRunRate],
+    () => ({
+      L: lifetimeWeeks,
+      h: serviceHours,
+      p: billingRate,
+      horizonWeeks,
+      targetAnnualizedRunRate,
+    }),
+    [lifetimeWeeks, serviceHours, billingRate, horizonWeeks, targetAnnualizedRunRate],
   );
 
   const current = useMemo(
@@ -300,12 +321,12 @@ export function GrowthTargetScenarioDemo() {
     () =>
       requiredSteadyStateAdmissions({
         L: lifetimeWeeks,
-        h: FIXED.h,
-        p: FIXED.p,
+        h: serviceHours,
+        p: billingRate,
         targetAnnualizedRunRate,
-        weeksPerYear: FIXED.weeksPerYear,
+        weeksPerYear: WEEKS_PER_YEAR,
       }),
-    [lifetimeWeeks, targetAnnualizedRunRate],
+    [lifetimeWeeks, serviceHours, billingRate, targetAnnualizedRunRate],
   );
 
   const costAssumptions = useMemo(
@@ -324,10 +345,10 @@ export function GrowthTargetScenarioDemo() {
 
   const company = useMemo(() => {
     const shared = {
-      h: FIXED.h,
-      p: FIXED.p,
+      h: serviceHours,
+      p: billingRate,
       horizonWeeks,
-      weeksPerYear: FIXED.weeksPerYear,
+      weeksPerYear: WEEKS_PER_YEAR,
     };
     return projectCompanyBranches(
       [
@@ -353,6 +374,8 @@ export function GrowthTargetScenarioDemo() {
   }, [
     n,
     lifetimeWeeks,
+    serviceHours,
+    billingRate,
     horizonWeeks,
     branch1OpeningWeek,
     branch1Capacity,
@@ -367,7 +390,7 @@ export function GrowthTargetScenarioDemo() {
       analyzeBranchCompanyTarget({
         company,
         targetAnnualizedRunRate,
-        weeksPerYear: FIXED.weeksPerYear,
+        weeksPerYear: WEEKS_PER_YEAR,
       }),
     [company, targetAnnualizedRunRate],
   );
@@ -376,15 +399,15 @@ export function GrowthTargetScenarioDemo() {
     () =>
       analyzeBranchCompanyTarget({
         company: projectCompanyBranches([company.branches[0].input], {
-          h: FIXED.h,
-          p: FIXED.p,
+          h: serviceHours,
+          p: billingRate,
           horizonWeeks,
-          weeksPerYear: FIXED.weeksPerYear,
+          weeksPerYear: WEEKS_PER_YEAR,
         }),
         targetAnnualizedRunRate,
-        weeksPerYear: FIXED.weeksPerYear,
+        weeksPerYear: WEEKS_PER_YEAR,
       }),
-    [company, horizonWeeks, targetAnnualizedRunRate],
+    [company, serviceHours, billingRate, horizonWeeks, targetAnnualizedRunRate],
   );
 
   const companyCosts = useMemo(
@@ -395,7 +418,7 @@ export function GrowthTargetScenarioDemo() {
   const costs = branchExpansionEnabled ? companyCosts : singleConfigCosts;
   const activeAnalysis = branchExpansionEnabled ? companyAnalysis : current.analysis;
   const horizonEconomics = costs.atHorizon;
-  const annualizedAtHorizon = horizonEconomics.weeklyRevenue * FIXED.weeksPerYear;
+  const annualizedAtHorizon = horizonEconomics.weeklyRevenue * WEEKS_PER_YEAR;
   const interpretation = branchExpansionEnabled
     ? interpretBranchExpansion({
         companyState: companyAnalysis.state,
@@ -424,9 +447,9 @@ export function GrowthTargetScenarioDemo() {
       const week = company.trajectory[index];
       points.push({
         t: week.t,
-        year: week.t / FIXED.weeksPerYear,
-        branch1Annualized: (week.branchWeeklyRevenue['branch-1'] ?? 0) * FIXED.weeksPerYear,
-        branch2Annualized: (week.branchWeeklyRevenue['branch-2'] ?? 0) * FIXED.weeksPerYear,
+        year: week.t / WEEKS_PER_YEAR,
+        branch1Annualized: (week.branchWeeklyRevenue['branch-1'] ?? 0) * WEEKS_PER_YEAR,
+        branch2Annualized: (week.branchWeeklyRevenue['branch-2'] ?? 0) * WEEKS_PER_YEAR,
         companyAnnualized: week.annualizedRunRate,
         target: targetAnnualizedRunRate,
       });
@@ -443,7 +466,7 @@ export function GrowthTargetScenarioDemo() {
   );
   const costChartPoints = useMemo(() => toCostChartPoints(costs), [costs]);
 
-  const horizonYears = horizonWeeks / FIXED.weeksPerYear;
+  const horizonYears = horizonWeeks / WEEKS_PER_YEAR;
   const yearTicks = [
     0,
     ...HORIZON_OPTIONS.filter((option) => option.years <= horizonYears).map((option) => option.years),
@@ -451,6 +474,15 @@ export function GrowthTargetScenarioDemo() {
   const weeklyChurn = formatWeeklyChurn(lifetimeWeeks);
   const visibleComparisonSeries = comparisonSeries.filter((series) => Math.abs(series.n - n) > 1e-9);
   const firstReachedWeek = activeAnalysis.firstReachedWeek;
+  const showCrossingDot = activeAnalysis.state === 'REACHED' && firstReachedWeek != null;
+  const crossingYear = showCrossingDot ? firstReachedWeek / WEEKS_PER_YEAR : null;
+  const targetLabel =
+    TARGET_OPTIONS.find((option) => option.amount === targetAnnualizedRunRate)?.label ??
+    formatUsdMillions(targetAnnualizedRunRate);
+  const crossingLabel =
+    showCrossingDot && firstReachedWeek != null
+      ? `reaches ${targetLabel} — week ${firstReachedWeek}`
+      : null;
   const ratiosExceedRevenue = directAndVariableExceedRevenue(costAssumptions);
 
   return (
@@ -497,7 +529,7 @@ export function GrowthTargetScenarioDemo() {
         <div>
           <small>Projection horizon</small>
           <strong>{horizonWeeks} weeks</strong>
-          <em>~{formatYearsFromWeeks(horizonWeeks, FIXED.weeksPerYear)} years</em>
+          <em>~{formatYearsFromWeeks(horizonWeeks, WEEKS_PER_YEAR)} years</em>
         </div>
         <div>
           <small>Annualized modeled plateau</small>
@@ -520,7 +552,7 @@ export function GrowthTargetScenarioDemo() {
           <strong>{firstReachedWeek != null ? `Week ${firstReachedWeek}` : '—'}</strong>
           <em>
             {firstReachedWeek != null
-              ? `~${formatYearsFromWeeks(firstReachedWeek, FIXED.weeksPerYear)} years`
+              ? `~${formatYearsFromWeeks(firstReachedWeek, WEEKS_PER_YEAR)} years`
               : activeAnalysis.state === 'UNREACHABLE_UNDER_ASSUMPTIONS'
                 ? 'Plateau is below the target'
                 : 'Not within this horizon'}
@@ -529,7 +561,7 @@ export function GrowthTargetScenarioDemo() {
         <div>
           <small>Approximate years to target</small>
           <strong>
-            {firstReachedWeek != null ? `~${formatYearsFromWeeks(firstReachedWeek, FIXED.weeksPerYear)}` : '—'}
+            {firstReachedWeek != null ? `~${formatYearsFromWeeks(firstReachedWeek, WEEKS_PER_YEAR)}` : '—'}
           </strong>
         </div>
         {branchExpansionEnabled ? (
@@ -574,7 +606,7 @@ export function GrowthTargetScenarioDemo() {
         <div>
           <small>Annualized billed run-rate</small>
           <strong>{formatUsd(annualizedAtHorizon)}</strong>
-          <em>weekly billed × {FIXED.weeksPerYear}</em>
+          <em>weekly billed × {WEEKS_PER_YEAR}</em>
         </div>
         <div>
           <small>Direct service cost</small>
@@ -643,7 +675,7 @@ export function GrowthTargetScenarioDemo() {
             {scenario.analysis.firstReachedWeek != null ? (
               <p className="gt-hit">
                 First reached: week {scenario.analysis.firstReachedWeek}
-                <em>~{formatYearsFromWeeks(scenario.analysis.firstReachedWeek, FIXED.weeksPerYear)} years</em>
+                <em>~{formatYearsFromWeeks(scenario.analysis.firstReachedWeek, WEEKS_PER_YEAR)} years</em>
               </p>
             ) : (
               <p className="gt-hit">
@@ -709,7 +741,7 @@ export function GrowthTargetScenarioDemo() {
                   }}
                 />
                 <ReferenceLine
-                  x={branch2OpeningWeek / FIXED.weeksPerYear}
+                  x={branch2OpeningWeek / WEEKS_PER_YEAR}
                   stroke="#918b9c"
                   strokeDasharray="3 3"
                   label={{ value: 'Branch 2 opens', fill: '#746b82', fontSize: 11, position: 'insideTopLeft' }}
@@ -717,6 +749,23 @@ export function GrowthTargetScenarioDemo() {
                 <Line type="monotone" dataKey="branch1Annualized" name="Branch 1" stroke="#a78bfa" strokeWidth={2} dot={false} />
                 <Line type="monotone" dataKey="branch2Annualized" name="Branch 2" stroke="#b33d30" strokeWidth={2} dot={false} />
                 <Line type="monotone" dataKey="companyAnnualized" name="Total company" stroke="#6d3df5" strokeWidth={3} dot={false} />
+                {showCrossingDot && crossingYear != null && crossingLabel ? (
+                  <ReferenceDot
+                    x={crossingYear}
+                    y={targetAnnualizedRunRate}
+                    r={5}
+                    fill="#6d3df5"
+                    stroke="#fff"
+                    strokeWidth={2}
+                    label={{
+                      value: crossingLabel,
+                      position: 'top',
+                      fill: '#4e367f',
+                      fontSize: 11,
+                      fontWeight: 700,
+                    }}
+                  />
+                ) : null}
               </LineChart>
             ) : (
               <LineChart data={chartPoints} margin={{ top: 18, right: 16, bottom: 4, left: 8 }}>
@@ -773,6 +822,23 @@ export function GrowthTargetScenarioDemo() {
                   strokeWidth={3}
                   dot={false}
                 />
+                {showCrossingDot && crossingYear != null && crossingLabel ? (
+                  <ReferenceDot
+                    x={crossingYear}
+                    y={targetAnnualizedRunRate}
+                    r={5}
+                    fill="#6d3df5"
+                    stroke="#fff"
+                    strokeWidth={2}
+                    label={{
+                      value: crossingLabel,
+                      position: 'top',
+                      fill: '#4e367f',
+                      fontSize: 11,
+                      fontWeight: 700,
+                    }}
+                  />
+                ) : null}
               </LineChart>
             )}
           </ResponsiveContainer>
@@ -780,7 +846,7 @@ export function GrowthTargetScenarioDemo() {
         {branchExpansionEnabled ? (
           <p className="gt-cost-disclaimer">{branchScenarioDisclaimer}</p>
         ) : (
-          <ExplainerCard explainer={explainGrowthTargetChart([current], targetAnnualizedRunRate, FIXED.weeksPerYear)} />
+          <ExplainerCard explainer={explainGrowthTargetChart([current], targetAnnualizedRunRate, WEEKS_PER_YEAR)} />
         )}
       </section>
 
@@ -956,9 +1022,41 @@ export function GrowthTargetScenarioDemo() {
             </label>
           </div>
           <div>
+            <small>Service hours h</small>
+            <strong>{serviceHours} hrs/client/week</strong>
+            <em>shared across branches</em>
+            <label className="gt-dial-slider">
+              Service hours per client-week
+              <input
+                type="range"
+                min={HOURS_MIN}
+                max={HOURS_MAX}
+                step={1}
+                value={serviceHours}
+                onChange={(event) => setServiceHours(clampHours(Number(event.target.value)))}
+              />
+            </label>
+          </div>
+          <div>
+            <small>Billing rate p</small>
+            <strong>{formatUsd(billingRate)}/hour</strong>
+            <em>shared across branches</em>
+            <label className="gt-dial-slider">
+              Billing rate per hour
+              <input
+                type="range"
+                min={RATE_MIN}
+                max={RATE_MAX}
+                step={1}
+                value={billingRate}
+                onChange={(event) => setBillingRate(clampRate(Number(event.target.value)))}
+              />
+            </label>
+          </div>
+          <div>
             <small>Time horizon</small>
             <strong>{horizonWeeks} weeks</strong>
-            <em>~{formatYearsFromWeeks(horizonWeeks, FIXED.weeksPerYear)} years</em>
+            <em>~{formatYearsFromWeeks(horizonWeeks, WEEKS_PER_YEAR)} years</em>
             <div className="gt-dial-pills">
               {HORIZON_OPTIONS.map((option) => (
                 <button
@@ -1149,15 +1247,15 @@ export function GrowthTargetScenarioDemo() {
           </div>
         </div>
         <p className="gt-fixed-assumptions">
-          Fixed v0.6 reference assumptions: h = {FIXED.h} service hours/client/week · p = {formatUsd(FIXED.p)}/hour ·
-          weeksPerYear = {FIXED.weeksPerYear} · inception census = 0. Cost and branch defaults are scenario assumptions,
-          not validated OSpectra values. Unlimited caregiver supply remains assumed except for the explicit client-capacity
+          Shared v0.6 assumptions: h = {serviceHours} service hours/client/week · p = {formatUsd(billingRate)}/hour ·
+          weeksPerYear = {WEEKS_PER_YEAR} · inception census = 0. Cost and branch defaults are scenario assumptions, not
+          validated OSpectra values. Unlimited caregiver supply remains assumed except for the explicit client-capacity
           cap on each branch.
         </p>
         <p className="od-path-note">
-          v0.6 lets you vary the annualized billed run-rate target, weekly admissions, retention/churn, projection
-          horizon, direct service cost, variable operating cost, fixed operating cost, and branch expansion. Service hours
-          and billing rate remain shared reference assumptions. Scenario values are assumptions, not predictions.
+          v0.6 lets you vary the annualized billed run-rate target, weekly admissions, retention/churn, service hours,
+          billing rate, projection horizon, direct service cost, variable operating cost, fixed operating cost, and
+          branch expansion. Scenario values are assumptions, not predictions.
         </p>
         <div className="gt-future">
           <small>Future business scenarios — not modeled in this v0.6 comparison</small>
