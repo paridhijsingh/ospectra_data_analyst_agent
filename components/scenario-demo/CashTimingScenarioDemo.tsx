@@ -72,30 +72,38 @@ export function CashTimingScenarioDemo() {
           </div>
           <div className="sd-point" style={{ left: '0%' }}>
             <i />
-            <strong>Oct 2</strong>
-            <span>Receipt A</span>
-            <b>+$15K</b>
+            <div className="sd-point-lbl">
+              <strong>Oct 2</strong>
+              <span>Receipt A</span>
+              <b>+$15K</b>
+            </div>
           </div>
-          <div className="sd-point sd-point-baseline" style={{ left: '17.6%' }}>
+          <div className="sd-point sd-point-baseline sd-point-above" style={{ left: '17.6%' }}>
             <i />
-            <strong>Oct 5</strong>
-            <span>Receipt B</span>
-            <b>+$40K</b>
-            <em>Baseline arrival</em>
+            <div className="sd-point-lbl">
+              <strong>Oct 5</strong>
+              <span>Receipt B</span>
+              <b>+$40K</b>
+              <em>Baseline arrival</em>
+            </div>
           </div>
           <div className="sd-point sd-point-cutoff" style={{ left: '23.5%' }}>
             <i />
-            <strong>Oct 6</strong>
-            <span>Obligation</span>
-            <b>$70K</b>
-            <em>Cutoff</em>
+            <div className="sd-point-lbl">
+              <strong>Oct 6</strong>
+              <span>Obligation</span>
+              <b>$70K</b>
+              <em>Cutoff</em>
+            </div>
           </div>
           <div className="sd-point sd-point-scenario" style={{ left: '100%' }}>
             <i />
-            <strong>Oct 19</strong>
-            <span>Receipt B</span>
-            <b>+$40K</b>
-            <em>Scenario arrival</em>
+            <div className="sd-point-lbl">
+              <strong>Oct 19</strong>
+              <span>Receipt B</span>
+              <b>+$40K</b>
+              <em>Scenario arrival</em>
+            </div>
           </div>
         </div>
       </section>

@@ -242,20 +242,20 @@ button.od-node { appearance:none; }
 .sd-timeline-panel { padding-bottom:12px; }
 .sd-rail { position:relative; height:196px; margin:4px 72px 0; }
 .sd-rail-line { position:absolute; left:0; right:0; top:100px; height:3px; border-radius:99px; background:linear-gradient(90deg,#c4b5fd,#6d3df5 35%,#6d3df5 55%,#f0c9c2); }
-.sd-point { position:absolute; top:0; bottom:0; width:132px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:3px; text-align:center; }
+.sd-point { position:absolute; top:0; height:100%; width:0; }
 .sd-point i { position:absolute; top:94px; left:50%; transform:translateX(-50%); width:14px; height:14px; border-radius:50%; background:#fff; border:3px solid #6d3df5; z-index:1; box-shadow:0 0 0 3px #f7f7fa; }
-.sd-point strong { margin-top:122px; color:#4e367f; font-size:12px; font-weight:700; }
-.sd-point span { color:#57525e; font-size:11px; font-weight:650; }
-.sd-point b { color:#24202d; font-size:13px; }
-.sd-point em { color:#918b9c; font-size:9px; font-style:normal; }
-.sd-point-baseline { justify-content:flex-end; padding-bottom:104px; }
-.sd-point-baseline strong { margin-top:0; }
+.sd-point-lbl { position:absolute; top:122px; left:50%; transform:translateX(-50%); width:132px; display:grid; justify-items:center; gap:3px; text-align:center; }
+.sd-point-lbl strong { color:#4e367f; font-size:12px; }
+.sd-point-lbl span { color:#57525e; font-size:11px; font-weight:650; }
+.sd-point-lbl b { color:#24202d; font-size:13px; }
+.sd-point-lbl em { color:#918b9c; font-size:9px; font-style:normal; }
+.sd-point-above .sd-point-lbl { top:auto; bottom:104px; }
 .sd-point-cutoff i { border-color:#24202d; background:#24202d; }
 .sd-point-cutoff strong,.sd-point-cutoff em { color:#24202d; font-weight:800; }
 .sd-point-scenario i { border-color:#b33d30; }
 .sd-point-scenario em { color:#b33d30; }
-.sd-delay-bridge { position:absolute; top:6px; left:17.6%; width:82.4%; border-top:2px dashed #d8a79e; display:flex; justify-content:center; pointer-events:none; }
-.sd-delay-bridge span { margin-top:-1px; transform:translateY(-50%); padding:2px 8px; border-radius:999px; background:#fff7f5; border:1px solid #f0c9c2; color:#b33d30; font-size:9px; font-weight:800; letter-spacing:.06em; }
+.sd-delay-bridge { position:absolute; top:6px; left:17.6%; width:82.4%; border-top:2px dashed #d8a79e; pointer-events:none; }
+.sd-delay-bridge span { position:absolute; top:-10px; left:50%; transform:translateX(-50%); padding:2px 8px; border-radius:999px; background:#fff7f5; border:1px solid #f0c9c2; color:#b33d30; font-size:9px; font-weight:800; letter-spacing:.06em; white-space:nowrap; }
 .sd-timeline-caption { margin:12px 0 0; color:#746b82; font-size:11px; line-height:1.4; }
 .sd-change-strip { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; padding:10px 14px; border:1px solid #ddd6ef; border-radius:10px; background:#f0ebff; color:#4e367f; }
 .sd-change-strip strong { font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:#7657cb; }
