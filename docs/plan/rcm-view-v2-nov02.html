@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OSpectra — RCM View v2: Authorization → Claim → Cash</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif; background:#0f172a; color:#e2e8f0; padding:24px 28px; }
+  .page { max-width:1460px; margin:0 auto; }
+  header { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:14px; }
+  h1 { font-size:28px; font-weight:800; color:#f8fafc; letter-spacing:-0.02em; }
+  h1 .a { color:#38bdf8; } h1 .v2 { color:#a78bfa; font-size:20px; vertical-align:middle; }
+  .subtitle { font-size:14px; color:#94a3b8; margin-top:5px; }
+  .badges { display:flex; gap:8px; padding-top:5px; flex-shrink:0; }
+  .badge { font-size:11.5px; font-weight:700; padding:6px 11px; border-radius:999px; letter-spacing:.04em; text-transform:uppercase; }
+  .proto { background:#7c3aed; color:#fff; } .synth { background:#334155; color:#fbbf24; border:1px solid #fbbf24; } .gov { background:#334155; color:#34d399; border:1px solid #34d399; }
+  .banner { background:linear-gradient(90deg,#7f1d1d,#991b1b); border:1px solid #ef4444; border-radius:12px; padding:13px 18px; display:flex; gap:26px; margin-bottom:14px; }
+  .banner div { flex:1; } .banner .label { font-size:10.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#fca5a5; margin-bottom:3px; }
+  .banner p { font-size:14px; line-height:1.4; color:#fef2f2; } .banner strong { color:#fff; }
+  .kpis { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:14px; }
+  .kpi { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:13px 16px; }
+  .kpi .l { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#94a3b8; margin-bottom:6px; }
+  .kpi .v { font-size:29px; font-weight:800; color:#f8fafc; } .kpi .n { font-size:12px; color:#94a3b8; margin-top:5px; line-height:1.35; }
+  .kpi.alert { border-color:#ef4444; background:#2a1622; } .kpi.alert .v { color:#f87171; } .kpi.good .v { color:#34d399; }
+  .grid3 { display:grid; grid-template-columns:1.25fr 1fr 1fr; gap:12px; margin-bottom:12px; }
+  .grid2 { display:grid; grid-template-columns:1.5fr 1fr; gap:12px; margin-bottom:12px; }
+  .card { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:15px 18px; }
+  .card h2 { font-size:15.5px; font-weight:800; color:#f8fafc; }
+  .card .sub { font-size:12px; color:#94a3b8; margin:3px 0 12px; line-height:1.4; }
+  .takeaway { border-top:1px solid #334155; margin-top:11px; padding-top:9px; font-size:12.5px; color:#94a3b8; line-height:1.45; }
+  .takeaway strong { color:#f1f5f9; }
+  .legend { display:flex; flex-wrap:wrap; gap:6px 14px; font-size:12px; color:#cbd5e1; margin-top:10px; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; }
+  .funnel-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .funnel-bar { height:34px; border-radius:6px; display:flex; align-items:center; padding:0 12px; font-size:13px; font-weight:700; color:#0f172a; min-width:120px; }
+  .funnel-conv { font-size:12px; color:#94a3b8; width:118px; flex-shrink:0; }
+  .funnel-label { font-size:12.5px; color:#cbd5e1; width:86px; flex-shrink:0; }
+  .bar-row { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+  .bar-row .bl { width:104px; font-size:12.5px; color:#cbd5e1; flex-shrink:0; }
+  .bar-row .bt { flex:1; background:#0f172a; border-radius:6px; height:18px; overflow:hidden; }
+  .bar-row .bf { height:100%; border-radius:6px; background:#a78bfa; }
+  .bar-row .bv { width:42px; text-align:right; font-size:12.5px; font-weight:700; color:#f1f5f9; }
+  .donut-wrap { display:flex; align-items:center; gap:16px; }
+  .donut-legend { font-size:12.5px; color:#cbd5e1; line-height:2; }
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#94a3b8; padding:8px 14px; border-bottom:1px solid #334155; }
+  td { font-size:13.5px; color:#e2e8f0; padding:9px 14px; border-bottom:1px solid #1e293b; vertical-align:top; line-height:1.35; }
+  tr:last-child td { border-bottom:none; } .risk { color:#f87171; font-weight:700; } .action { color:#7dd3fc; }
+  .table-card { background:#1e293b; border:1px solid #334155; border-radius:12px; overflow:hidden; margin-bottom:12px; }
+  .table-card .th { padding:13px 18px 2px; } .table-card h2 { font-size:15.5px; font-weight:800; color:#f8fafc; }
+  .table-card .sub { font-size:12px; color:#94a3b8; margin:3px 0 4px; }
+  footer { display:flex; justify-content:space-between; gap:24px; font-size:12px; color:#64748b; line-height:1.5; } footer strong { color:#94a3b8; }
+  .followups { display:flex; gap:10px; margin-bottom:12px; }
+  .fu { flex:1; background:#16233c; border:1px dashed #38bdf8; border-radius:10px; padding:10px 14px; font-size:12.5px; color:#bae6fd; line-height:1.4; }
+  .fu strong { color:#7dd3fc; display:block; font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:2px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div>
+    <h1>RCM View: Authorization <span class="a">→</span> Claim <span class="a">→</span> Cash <span class="v2">v2 — better charts, every chart explains itself</span></h1>
+    <p class="subtitle">OSpectra Data Analyst Coworker — where money gets stuck between work done and cash in the bank, and which payroll date it threatens.</p>
+  </div>
+  <div class="badges"><span class="badge proto">Prototype</span><span class="badge synth">Synthetic data</span><span class="badge gov">Finance: not yet governed</span></div>
+</header>
+
+<div class="banner">
+  <div><div class="label">What happened</div><p><strong>$190k earned, not collected</strong> — $1.44M earned vs $1.25M collected.</p></div>
+  <div><div class="label">So what</div><p>One <strong>$40k reimbursement 14 days late</strong> leaves us $40k short against $105k pre-obligation cash at the next payroll.</p></div>
+  <div><div class="label">Next action</div><p><strong>Chase the $40k claim before its due date;</strong> hold a buffer above payroll obligations until it lands.</p></div>
+</div>
+
+<div class="kpis">
+  <div class="kpi"><div class="l">Earned</div><div class="v">$1.44M</div><div class="n">Delivered &amp; billed, this period</div></div>
+  <div class="kpi"><div class="l">Collected</div><div class="v">$1.25M</div><div class="n">Cash received &amp; posted</div></div>
+  <div class="kpi alert"><div class="l">Earned, not collected</div><div class="v">$190k</div><div class="n">The gap this page exists to shrink</div></div>
+  <div class="kpi good"><div class="l">Net collection rate</div><div class="v">86.8%</div><div class="n">Collected ÷ earned — Candid's headline metric, applied here</div></div>
+  <div class="kpi"><div class="l">Touchless answer rate</div><div class="v" style="color:#a78bfa">New</div><div class="n">Proposed metric: % of questions answered governed, end-to-end, no manual fix (our TCR)</div></div>
+</div>
+
+<div class="grid3">
+  <div class="card">
+    <h2>1 · Earned → Collected bridge — where the $190k sits in the $1.44M</h2>
+    <p class="sub">One bar, true scale. Collected is 86.8% of earned; the rest is still moving — or stuck.</p>
+    <svg viewBox="0 0 560 92" width="100%">
+      <rect x="0"   y="18" width="486" height="40" rx="6" fill="#34d399"/>
+      <rect x="486" y="18" width="32"  height="40" fill="#38bdf8"/>
+      <rect x="518" y="18" width="21"  height="40" fill="#fbbf24"/>
+      <rect x="539" y="18" width="12"  height="40" fill="#fb923c"/>
+      <rect x="551" y="18" width="9"   height="40" rx="6" fill="#ef4444"/>
+      <text x="10" y="43" fill="#0f172a" font-size="14" font-weight="700">Collected $1.25M</text>
+      <text x="0" y="80" fill="#94a3b8" font-size="11.5">Uncollected segments are drawn to scale — small on the bar, big at payroll.</text>
+    </svg>
+    <div class="legend">
+      <span><span class="dot" style="background:#38bdf8"></span>0–30d $82k</span>
+      <span><span class="dot" style="background:#fbbf24"></span>31–60d $54k</span>
+      <span><span class="dot" style="background:#fb923c"></span>61–90d $31k</span>
+      <span><span class="dot" style="background:#ef4444"></span>90+d $23k</span>
+    </div>
+    <div class="takeaway"><strong>So what:</strong> the leak is only 13.2% of earned — but it is 181% of our pre-obligation cash. Scale on the chart is not scale at payroll.</div>
+  </div>
+
+  <div class="card">
+    <h2>2 · Claim funnel — where claims fall out</h2>
+    <p class="sub">Same stage-conversion model as recruitment, finance edition. Synthetic example $.</p>
+    <div class="funnel-row"><span class="funnel-label">Authorized</span><div class="funnel-bar" style="width:100%;background:#7dd3fc">$1.58M</div></div>
+    <div class="funnel-row"><span class="funnel-label">Submitted</span><div class="funnel-bar" style="width:91%;background:#38bdf8">$1.44M</div><span class="funnel-conv">91% of authorized</span></div>
+    <div class="funnel-row"><span class="funnel-label">Accepted</span><div class="funnel-bar" style="width:83%;background:#818cf8">$1.31M</div><span class="funnel-conv">91% clean acceptance</span></div>
+    <div class="funnel-row"><span class="funnel-label">Paid</span><div class="funnel-bar" style="width:79%;background:#34d399">$1.25M</div><span class="funnel-conv">95% of accepted</span></div>
+    <div class="takeaway"><strong>So what:</strong> the biggest drop is before submission (authorized → submitted) — unbilled work, not payer behaviour. Fix intake, not appeals.</div>
+  </div>
+
+  <div class="card">
+    <h2>3 · A/R aging — how old is the stuck money?</h2>
+    <p class="sub">Composition of the $190k uncollected. Segments sum to $190k.</p>
+    <div class="donut-wrap">
+      <svg viewBox="0 0 180 180" width="150" height="150">
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#0f172a" stroke-width="30"/>
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#38bdf8" stroke-width="30" stroke-dasharray="189.8 250" transform="rotate(-90 90 90)"/>
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#fbbf24" stroke-width="30" stroke-dasharray="125 314.8" stroke-dashoffset="-189.8" transform="rotate(-90 90 90)"/>
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#fb923c" stroke-width="30" stroke-dasharray="71.8 368" stroke-dashoffset="-314.8" transform="rotate(-90 90 90)"/>
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#ef4444" stroke-width="30" stroke-dasharray="53.3 386.5" stroke-dashoffset="-386.6" transform="rotate(-90 90 90)"/>
+        <text x="90" y="86" fill="#f8fafc" font-size="21" font-weight="800" text-anchor="middle">$190k</text>
+        <text x="90" y="106" fill="#94a3b8" font-size="11" text-anchor="middle">uncollected</text>
+      </svg>
+      <div class="donut-legend">
+        <span class="dot" style="background:#38bdf8"></span>0–30 days · $82k<br>
+        <span class="dot" style="background:#fbbf24"></span>31–60 days · $54k<br>
+        <span class="dot" style="background:#fb923c"></span>61–90 days · $31k<br>
+        <span class="dot" style="background:#ef4444"></span>90+ days · $23k
+      </div>
+    </div>
+    <div class="takeaway"><strong>So what:</strong> $108k (57%) is already over 30 days old. Aging, not volume, is the risk.</div>
+  </div>
+</div>
+
+<div class="grid2">
+  <div class="card">
+    <h2>4 · Expected cash by week — bars + cumulative line (the timeline, fixed)</h2>
+    <p class="sub">Weekly expected collections (bars, $k) and cumulative collected (line). <span style="color:#fbbf24;font-weight:700;">▬ Yellow = payroll obligation</span> (Wk 2 &amp; Wk 5). One series per axis — no overlap.</p>
+    <svg viewBox="0 0 640 210" width="100%">
+      <line x1="34" y1="178" x2="625" y2="178" stroke="#475569"/>
+      <rect x="58"  y="86"  width="52" height="92"  rx="5" fill="#38bdf8"/>
+      <rect x="148" y="107" width="52" height="71"  rx="5" fill="#38bdf8"/>
+      <rect x="238" y="73"  width="52" height="105" rx="5" fill="#38bdf8"/>
+      <rect x="328" y="119" width="52" height="59"  rx="5" fill="#ef4444"/>
+      <rect x="418" y="97"  width="52" height="81"  rx="5" fill="#38bdf8"/>
+      <rect x="508" y="80"  width="52" height="98"  rx="5" fill="#38bdf8"/>
+      <line x1="148" y1="26" x2="200" y2="26" stroke="#fbbf24" stroke-width="3"/>
+      <line x1="418" y1="26" x2="470" y2="26" stroke="#fbbf24" stroke-width="3"/>
+      <!-- cumulative line: values 62,110,181,221,276,342 scaled: y = 178 - cum*0.476 -->
+      <polyline points="84,149 174,126 264,92 354,73 444,47 534,15" fill="none" stroke="#a78bfa" stroke-width="3"/>
+      <circle cx="84" cy="149" r="4" fill="#a78bfa"/><circle cx="174" cy="126" r="4" fill="#a78bfa"/><circle cx="264" cy="92" r="4" fill="#a78bfa"/>
+      <circle cx="354" cy="73" r="4" fill="#ef4444"/><circle cx="444" cy="47" r="4" fill="#a78bfa"/><circle cx="534" cy="15" r="4" fill="#a78bfa"/>
+      <text x="84" y="196" fill="#94a3b8" font-size="11.5" text-anchor="middle">Wk 1 · 62</text>
+      <text x="174" y="196" fill="#94a3b8" font-size="11.5" text-anchor="middle">Wk 2 · 48</text>
+      <text x="264" y="196" fill="#94a3b8" font-size="11.5" text-anchor="middle">Wk 3 · 71</text>
+      <text x="354" y="196" fill="#f87171" font-size="11.5" text-anchor="middle">Wk 4 · 40 ⚠</text>
+      <text x="444" y="196" fill="#94a3b8" font-size="11.5" text-anchor="middle">Wk 5 · 55</text>
+      <text x="534" y="196" fill="#94a3b8" font-size="11.5" text-anchor="middle">Wk 6 · 66</text>
+      <text x="548" y="19" fill="#a78bfa" font-size="11.5">$342k cum.</text>
+    </svg>
+    <div class="takeaway"><strong>So what:</strong> cumulative cash stays healthy <em>only if Week 4 lands</em>. The red bar is the $40k claim — if it slips 14 days, it arrives after the Week 5 payroll.</div>
+  </div>
+
+  <div class="card">
+    <h2>5 · Denials by root cause — fix upstream</h2>
+    <p class="sub">Synthetic example mix — the taxonomy is the proposal.</p>
+    <div class="bar-row"><span class="bl">Documentation</span><div class="bt"><div class="bf" style="width:100%"></div></div><span class="bv">34%</span></div>
+    <div class="bar-row"><span class="bl">Authorization</span><div class="bt"><div class="bf" style="width:76%"></div></div><span class="bv">26%</span></div>
+    <div class="bar-row"><span class="bl">Eligibility</span><div class="bt"><div class="bf" style="width:53%"></div></div><span class="bv">18%</span></div>
+    <div class="bar-row"><span class="bl">Coding</span><div class="bt"><div class="bf" style="width:35%"></div></div><span class="bv">12%</span></div>
+    <div class="bar-row"><span class="bl">Timely filing</span><div class="bt"><div class="bf" style="width:29%"></div></div><span class="bv">10%</span></div>
+    <div class="takeaway"><strong>So what:</strong> 60% of denials (documentation + authorization) are created <em>before</em> a claim exists. Candid's lesson: feed causes back to intake, don't just work appeals.</div>
+  </div>
+</div>
+
+<div class="followups">
+  <div class="fu"><strong>Drill down</strong>Which payer holds most of the 90+ day $23k?</div>
+  <div class="fu"><strong>Drill up</strong>How does this quarter's net collection rate compare to last quarter?</div>
+  <div class="fu"><strong>Drill across</strong>If the $40k slips, which payroll date breaks — and by how much?</div>
+</div>
+
+<div class="table-card">
+  <div class="th"><h2>6 · At-risk cash — act on these first</h2><p class="sub">Synthetic example rows. The workflow is the proposal: every at-risk claim gets an owner and a chase-by date, before the due date.</p></div>
+  <table>
+    <tr><th>Claim</th><th>Amount</th><th>Why at risk</th><th>If it slips</th><th>Next action</th></tr>
+    <tr><td>Payer A — Claim 1042</td><td><strong>$40,000</strong></td><td>Expected Week 4; no remittance signal yet</td><td class="risk">Payroll shortfall $40k vs $105k pre-obligation cash</td><td class="action">Chase payer this week; confirm receipt + adjudication date</td></tr>
+    <tr><td>Payer B — Claim 0987</td><td><strong>$23,000</strong></td><td>90+ day bucket; denied once, documentation</td><td class="risk">Write-off risk if appeal window closes</td><td class="action">Attach missing documentation; resubmit inside window</td></tr>
+    <tr><td>Payer C — Claims batch</td><td><strong>$31,000</strong></td><td>61–90 day bucket; authorization mismatch pattern</td><td class="risk">Repeat denials on the next batch, same root cause</td><td class="action">Fix authorization check at intake; follow up batch</td></tr>
+  </table>
+</div>
+
+<footer>
+  <div><strong>How to read this page:</strong> template numbers ($1.44M / $1.25M) + clearly labelled synthetic splits — nothing computed from live systems yet. Phase 1 ask for Jags: claims lifecycle + remittance + payroll tables make every chart here real.</div>
+  <div style="text-align:right;flex-shrink:0"><strong>OSpectra Data Analyst Coworker</strong><br>Research Preview v2 — Nov 2, 2026</div>
+</footer>
+
+</div>
+</body>
+</html>

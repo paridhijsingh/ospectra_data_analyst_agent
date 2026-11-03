@@ -1,0 +1,95 @@
+--- /home/hatch/workspace/ospectra-data-analyst-agent/components/scenario-demo/CashTimingScenarioDemo.tsx	2026-10-25 15:04:55.033033641 -0700
++++ /tmp/step1/components/scenario-demo/CashTimingScenarioDemo.tsx	2026-11-02 10:27:44.769731336 -0800
+@@ -67,38 +67,44 @@
+         </div>
+         <div className="sd-rail" role="img" aria-label="Timeline from October 2 through October 19 showing Receipt B moving past the October 6 obligation">
+           <div className="sd-rail-line" />
+-          <div className="sd-rail-points">
+-            <div className="sd-point">
+-              <i />
++          <div className="sd-delay-bridge" aria-hidden="true">
++            <span>+14 DAYS</span>
++          </div>
++          <div className="sd-point" style={{ left: '0%' }}>
++            <i />
++            <div className="sd-point-lbl">
+               <strong>Oct 2</strong>
+               <span>Receipt A</span>
+               <b>+$15K</b>
+             </div>
+-            <div className="sd-point sd-point-baseline">
+-              <i />
++          </div>
++          <div className="sd-point sd-point-baseline sd-point-above" style={{ left: '17.6%' }}>
++            <i />
++            <div className="sd-point-lbl">
+               <strong>Oct 5</strong>
+               <span>Receipt B</span>
+               <b>+$40K</b>
+               <em>Baseline arrival</em>
+             </div>
+-            <div className="sd-point sd-point-cutoff">
+-              <i />
++          </div>
++          <div className="sd-point sd-point-cutoff" style={{ left: '23.5%' }}>
++            <i />
++            <div className="sd-point-lbl">
+               <strong>Oct 6</strong>
+               <span>Obligation</span>
+               <b>$70K</b>
+               <em>Cutoff</em>
+             </div>
+-            <div className="sd-point sd-point-scenario">
+-              <i />
++          </div>
++          <div className="sd-point sd-point-scenario" style={{ left: '100%' }}>
++            <i />
++            <div className="sd-point-lbl">
+               <strong>Oct 19</strong>
+               <span>Receipt B</span>
+               <b>+$40K</b>
+               <em>Scenario arrival</em>
+             </div>
+           </div>
+-          <div className="sd-delay-bridge" aria-hidden="true">
+-            <span>+14 DAYS</span>
+-          </div>
+         </div>
+       </section>
+         <ExplainerCard explainer={explainCashTimingTimeline(result, delayedReimbursementFixture)} />
+--- /home/hatch/workspace/ospectra-data-analyst-agent/app/globals.css	2026-10-25 15:04:55.031840110 -0700
++++ /tmp/step1/app/globals.css	2026-11-02 10:28:49.247456834 -0800
+@@ -240,21 +240,22 @@
+ .sd-delta span,.sd-delta small { font-size:9px; letter-spacing:.06em; text-transform:uppercase; opacity:.9; }
+ .sd-delta strong { font-size:22px; letter-spacing:-.02em; }
+ .sd-timeline-panel { padding-bottom:12px; }
+-.sd-rail { position:relative; margin-top:8px; padding:8px 8px 4px; }
+-.sd-rail-line { position:absolute; left:8%; right:8%; top:22px; height:3px; border-radius:99px; background:linear-gradient(90deg,#c4b5fd,#6d3df5 35%,#6d3df5 55%,#f0c9c2); }
+-.sd-rail-points { position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+-.sd-point { display:grid; justify-items:center; gap:3px; text-align:center; padding-top:4px; }
+-.sd-point i { width:14px; height:14px; border-radius:50%; background:#fff; border:3px solid #6d3df5; z-index:1; box-shadow:0 0 0 3px #f7f7fa; }
+-.sd-point strong { margin-top:8px; color:#4e367f; font-size:12px; }
+-.sd-point span { color:#57525e; font-size:11px; font-weight:650; }
+-.sd-point b { color:#24202d; font-size:13px; }
+-.sd-point em { color:#918b9c; font-size:9px; font-style:normal; }
++.sd-rail { position:relative; height:196px; margin:4px 72px 0; }
++.sd-rail-line { position:absolute; left:0; right:0; top:100px; height:3px; border-radius:99px; background:linear-gradient(90deg,#c4b5fd,#6d3df5 35%,#6d3df5 55%,#f0c9c2); }
++.sd-point { position:absolute; top:0; height:100%; width:0; }
++.sd-point i { position:absolute; top:94px; left:50%; transform:translateX(-50%); width:14px; height:14px; border-radius:50%; background:#fff; border:3px solid #6d3df5; z-index:1; box-shadow:0 0 0 3px #f7f7fa; }
++.sd-point-lbl { position:absolute; top:122px; left:50%; transform:translateX(-50%); width:132px; display:grid; justify-items:center; gap:3px; text-align:center; }
++.sd-point-lbl strong { color:#4e367f; font-size:12px; }
++.sd-point-lbl span { color:#57525e; font-size:11px; font-weight:650; }
++.sd-point-lbl b { color:#24202d; font-size:13px; }
++.sd-point-lbl em { color:#918b9c; font-size:9px; font-style:normal; }
++.sd-point-above .sd-point-lbl { top:auto; bottom:104px; }
+ .sd-point-cutoff i { border-color:#24202d; background:#24202d; }
+ .sd-point-cutoff strong,.sd-point-cutoff em { color:#24202d; font-weight:800; }
+ .sd-point-scenario i { border-color:#b33d30; }
+ .sd-point-scenario em { color:#b33d30; }
+-.sd-delay-bridge { position:absolute; left:37%; width:50%; top:8px; display:flex; justify-content:center; pointer-events:none; }
+-.sd-delay-bridge span { padding:2px 8px; border-radius:999px; background:#fff7f5; border:1px solid #f0c9c2; color:#b33d30; font-size:9px; font-weight:800; letter-spacing:.06em; }
++.sd-delay-bridge { position:absolute; top:6px; left:17.6%; width:82.4%; border-top:2px dashed #d8a79e; pointer-events:none; }
++.sd-delay-bridge span { position:absolute; top:-10px; left:50%; transform:translateX(-50%); padding:2px 8px; border-radius:999px; background:#fff7f5; border:1px solid #f0c9c2; color:#b33d30; font-size:9px; font-weight:800; letter-spacing:.06em; white-space:nowrap; }
+ .sd-timeline-caption { margin:12px 0 0; color:#746b82; font-size:11px; line-height:1.4; }
+ .sd-change-strip { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; padding:10px 14px; border:1px solid #ddd6ef; border-radius:10px; background:#f0ebff; color:#4e367f; }
+ .sd-change-strip strong { font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:#7657cb; }

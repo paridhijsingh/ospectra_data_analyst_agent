@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OSpectra Data Analyst Coworker — Nov 2 Presentation</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif; background:#020617; color:#e2e8f0; }
+  .slide { width:1600px; height:900px; padding:54px 68px 88px; position:relative; overflow:hidden; background:#0f172a; margin:0 auto 24px; display:flex; flex-direction:column; }
+  .kicker { font-size:14px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:#38bdf8; margin-bottom:14px; }
+  h1 { font-size:64px; font-weight:800; color:#f8fafc; line-height:1.08; letter-spacing:-0.02em; }
+  h2 { font-size:44px; font-weight:800; color:#f8fafc; line-height:1.12; letter-spacing:-0.015em; margin-bottom:18px; }
+  .lede { font-size:24px; color:#94a3b8; line-height:1.5; max-width:1150px; }
+  .num { position:absolute; right:68px; top:54px; font-size:15px; color:#475569; font-weight:700; }
+  .foot { position:absolute; left:68px; right:68px; bottom:36px; display:flex; justify-content:space-between; font-size:14px; color:#475569; border-top:1px solid #1e293b; padding-top:14px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:28px; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; margin-top:28px; }
+  .card { background:#1e293b; border:1px solid #334155; border-radius:16px; padding:24px 26px; }
+  .card h3 { font-size:21px; font-weight:800; color:#f8fafc; margin-bottom:10px; }
+  .card p, .card li { font-size:18px; color:#cbd5e1; line-height:1.5; }
+  .card ul { padding-left:20px; } .card li { margin-bottom:7px; }
+  .card.accent { border-color:#38bdf8; } .card.red { border-color:#ef4444; } .card.purple { border-color:#a78bfa; } .card.green { border-color:#34d399; }
+  .big { font-size:40px; font-weight:800; color:#f8fafc; }
+  .tag { display:inline-block; font-size:12.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; padding:5px 11px; border-radius:999px; margin-bottom:12px; }
+  .tag.blue { background:#0c4a6e; color:#7dd3fc; } .tag.red { background:#7f1d1d; color:#fca5a5; } .tag.green { background:#064e3b; color:#6ee7b7; } .tag.purple { background:#4c1d95; color:#c4b5fd; } .tag.amber { background:#713f12; color:#fcd34d; }
+  .pipe { display:flex; align-items:stretch; gap:0; margin-top:34px; }
+  .step { flex:1; background:#1e293b; border:1px solid #334155; padding:20px 16px; text-align:center; }
+  .step:first-child { border-radius:14px 0 0 14px; } .step:last-child { border-radius:0 14px 14px 0; }
+  .step .s-t { font-size:18px; font-weight:800; color:#f8fafc; } .step .s-n { font-size:14px; color:#94a3b8; margin-top:6px; line-height:1.4; }
+  .arr { align-self:center; font-size:22px; color:#38bdf8; padding:0 4px; }
+  .say { margin-top:auto; background:#16233c; border-left:5px solid #38bdf8; border-radius:0 12px 12px 0; padding:18px 24px; font-size:20px; color:#e0f2fe; line-height:1.5; }
+  .say strong { color:#7dd3fc; }
+  table { width:100%; border-collapse:collapse; margin-top:22px; }
+  th { text-align:left; font-size:14px; letter-spacing:.07em; text-transform:uppercase; color:#94a3b8; padding:12px 16px; border-bottom:2px solid #334155; background:#1e293b; }
+  td { font-size:18px; color:#e2e8f0; padding:13px 16px; border-bottom:1px solid #1e293b; line-height:1.45; vertical-align:top; }
+  .hl { color:#38bdf8; font-weight:700; } .hlr { color:#f87171; font-weight:700; } .hlg { color:#34d399; font-weight:700; } .hlp { color:#a78bfa; font-weight:700; }
+  img.shot { border-radius:14px; border:1px solid #334155; }
+  .title-wrap { margin-top:120px; }
+  .title-badges { display:flex; gap:10px; margin-top:34px; }
+  .tbadge { font-size:14px; font-weight:700; padding:9px 16px; border-radius:999px; background:#1e293b; border:1px solid #334155; color:#cbd5e1; }
+</style>
+</head>
+<body>
+
+<!-- 1 TITLE -->
+<section class="slide">
+  <div class="title-wrap">
+    <div class="kicker">OSpectra · Data Analyst Coworker · Nov 2, 2026</div>
+    <h1>What we can do today.<br>What RCM teaches us.<br><span style="color:#38bdf8">What we build next — with Jags.</span></h1>
+    <p class="lede" style="margin-top:26px">Capabilities, gaps and improvements for the Data Analyst Coworker — with Candid Health + revenue cycle research integrated, better visualisations, and a data-engineering plan.</p>
+    <div class="title-badges">
+      <span class="tbadge">Paridhi Jay Singh</span>
+      <span class="tbadge">Research Preview</span>
+      <span class="tbadge">All demo data is synthetic</span>
+    </div>
+  </div>
+  <div class="foot"><span>OSpectra Data Analyst Coworker</span><span>1 / 11</span></div>
+</section>
+
+<!-- 2 WHERE WE ARE -->
+<section class="slide">
+  <div class="num">02</div>
+  <div class="kicker">Where we are</div>
+  <h2>A governed AI analyst — architecture proven, live data not yet connected</h2>
+  <p class="lede">The agent answers only with governed metrics, shows its evidence and lineage, and refuses what it is not allowed to answer. That refusal is the point.</p>
+  <div class="pipe">
+    <div class="step"><div class="s-t">Intent Router</div><div class="s-n">What is the user asking?</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">Semantic Validator</div><div class="s-n">Is the metric governed?</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">Metric Executor</div><div class="s-n">Compute from the model</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">Quality Guard</div><div class="s-n">Is the answer sound?</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">Narrative Composer</div><div class="s-n">Answer + evidence + next</div></div>
+  </div>
+  <div class="grid3">
+    <div class="card"><span class="tag blue">Live proof</span><p>Ask for <strong>LTV</strong> → <span class="hlr">BLOCKED by semantic policy</span>. Zero LTV code paths. Governance works.</p></div>
+    <div class="card"><span class="tag green">Benchmark</span><p>Murali's standard (Oct 28): perform like a human analyst who makes complex data consumable — the Steve Kornacki bar.</p></div>
+    <div class="card"><span class="tag amber">Scope rule</span><p>Research Preview = prototypes + abstractions on spreadsheets. Warehouse / QuickBooks / live data = Phase 1 handover.</p></div>
+  </div>
+  <div class="foot"><span>Repo: ospectra_data_analyst_agent · 131 tests passing · build passing</span><span>2 / 11</span></div>
+</section>
+
+<!-- 3 CAPABILITIES -->
+<section class="slide">
+  <div class="num">03</div>
+  <div class="kicker">Current capabilities</div>
+  <h2>Recruitment is real. Finance is present — but templated.</h2>
+  <div class="grid2">
+    <div class="card green">
+      <h3>Recruitment half — stronger</h3>
+      <ul>
+        <li><strong>12 governed questions</strong> over 1,019 synthetic applications (Apr–Sep 2026)</li>
+        <li>Answer + table + chart + interpretation, with lineage on every answer</li>
+        <li>Scenario page: run-rate / growth target (Q4–Q5) — math verified: ~1.76 admissions/wk reaches a $5M run-rate; 2/wk → ~$5.68M/yr by week 111</li>
+        <li>Partial honestly: Q1 time-to-hire by department, Q2 no quarter filter, Q3 scenario-only</li>
+      </ul>
+    </div>
+    <div class="card red">
+      <h3>Finance half — read the label</h3>
+      <ul>
+        <li><strong>25 questions, static templates</strong> — e.g. $1.44M earned / $1.25M collected looks computed, is not</li>
+        <li>No financial semantic catalog (recruitment has YAML; finance has none)</li>
+        <li>Two explanations already rewritten to the new standard: cash timing + growth target</li>
+        <li>No warehouse, no QuickBooks — synthetic data only, by design for Research Preview</li>
+      </ul>
+    </div>
+  </div>
+  <div class="say"><strong>Say:</strong> "I'm not hiding the split. Recruitment proves the governed architecture. Finance is where today's agenda is."</div>
+  <div class="foot"><span>Source: firsthand repo review, Oct 25 · Present Data, Oct 26</span><span>3 / 11</span></div>
+</section>
+
+<!-- 4 GAPS -->
+<section class="slide">
+  <div class="num">04</div>
+  <div class="kicker">Gaps</div>
+  <h2>Three buckets — decisions, build, handover</h2>
+  <div class="grid3">
+    <div class="card red">
+      <span class="tag red">Bucket 1 · Decisions</span>
+      <ul>
+        <li>Is $5M annual gross revenue?</li>
+        <li>Canonical metrics: <strong>11 governed vs 8 in code</strong> — only 3 overlap. What is the 12th?</li>
+        <li>Declare or cut <em>application_share</em> + <em>active_pipeline_rate</em>?</li>
+        <li>Is finance / RCM in my scope now? Is LTV/CAC?</li>
+      </ul>
+    </div>
+    <div class="card purple">
+      <span class="tag purple">Bucket 2 · Build (Research Preview)</span>
+      <ul>
+        <li>No define-a-metric workflow — blocked questions dead-end</li>
+        <li>"Why" + "Next" are one-liners; no drill-down / up / across follow-ups</li>
+        <li>No quarter filter · no time-to-fill</li>
+        <li>Scenario pages not wired into chat · timeline overlap · dials not sliders · no feedback loop</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag blue">Bucket 3 · Phase 1 handover</span>
+      <ul>
+        <li>Warehouse connector + finance semantic model</li>
+        <li>QuickBooks connection (real reimbursement / cash)</li>
+        <li>Export, onboarding, self-serve metric publishing, access revoke</li>
+        <li>Reconcile repo to canonical list once Bucket 1 lands</li>
+      </ul>
+    </div>
+  </div>
+  <div class="say"><strong>Say:</strong> "Bucket 1 is not code. Until the metric list is decided, every new question risks building on sand — that's how we got 8 vs 11."</div>
+  <div class="foot"><span>Source: gap analysis presented Oct 27 · handover to Jags, Oct 30</span><span>4 / 11</span></div>
+</section>
+
+<!-- 5 RCM MAP -->
+<section class="slide">
+  <div class="num">05</div>
+  <div class="kicker">Research · RCM</div>
+  <h2>Revenue cycle: earned is not collected — and timing is the decision</h2>
+  <div class="pipe">
+    <div class="step"><div class="s-t">1 Intake</div><div class="s-n">Eligibility + coverage</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">2 Authorization</div><div class="s-n">Hours / service approved</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">3 Documentation</div><div class="s-n">Notes · EVV · coding</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">4 Claim</div><div class="s-n">Scrub + submit on time</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">5 Adjudication</div><div class="s-n">Paid · rejected · denied</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">6 Remittance</div><div class="s-n">Posting: paid vs earned</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">7 Denials + A/R</div><div class="s-n">Root cause + aging</div></div><div class="arr">→</div>
+    <div class="step" style="border-color:#ef4444"><div class="s-t" style="color:#f87171">8 Cash decision</div><div class="s-n">Payroll funding date</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Where leaks happen in home care</h3><p>Documentation delays, coding / OASIS errors, missed filing windows, authorization mismatches — most are created at steps 1–3, long before a payer says no.</p></div>
+    <div class="card accent"><h3>Our wedge lives at step 8</h3><p><span class="hl">$190k earned, not collected.</span> One $40k reimbursement 14 days late = $40k short against $105k pre-obligation cash. The agent's job: warn at steps 4–7, before step 8 breaks.</p></div>
+  </div>
+  <div class="foot"><span>RCM = every financial step from intake to cash</span><span>5 / 11</span></div>
+</section>
+
+<!-- 6 CANDID -->
+<section class="slide">
+  <div class="num">06</div>
+  <div class="kicker">Research · Candid Health</div>
+  <h2>Candid Health: rebuild the billing system around payer rules — don't layer on top</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>What it is</h3>
+      <ul>
+        <li>The <strong>billing system of record</strong> — the financial counterpart to the EHR: registration, eligibility, claims, remits, denials, A/R, reporting</li>
+        <li>A <strong>configurable, payer-aware rules engine</strong> checks + corrects claims <em>before</em> submission</li>
+        <li>API-first, EHR-integrated; now adding an agentic layer over Candid + legacy billing systems</li>
+        <li>Company-reported: 200+ provider orgs, ~$12B claim volume this year; $120M Series D, July 2026</li>
+      </ul>
+    </div>
+    <div class="card purple">
+      <h3>The two metrics it runs on</h3>
+      <p style="margin-bottom:14px"><span class="big">Net collection rate</span><br>% of collectible payer revenue a provider actually receives</p>
+      <p><span class="big">Touchless Claim Rate</span><br>% of claims submitted + finalized with <strong>no human touch</strong></p>
+    </div>
+  </div>
+  <div class="say" style="border-left-color:#f87171"><strong>Fit gap — say it first:</strong> Candid's customers are medical groups + digital health. No public evidence it handles HCBA waiver billing, EVV reconciliation, or OASIS-driven home-care claims. Pricing is not published. <strong>Today it is a reference model, not a recommendation.</strong></div>
+  <div class="foot"><span>Sources: candidhealth.com · CEO interview, Healthcare AI Guy · Pulse2 Series D report</span><span>6 / 11</span></div>
+</section>
+
+<!-- 7 BORROW -->
+<section class="slide">
+  <div class="num">07</div>
+  <div class="kicker">Research integrated</div>
+  <h2>What we borrow from Candid — without buying it</h2>
+  <table>
+    <tr><th style="width:30%">Candid pattern</th><th style="width:32%">Our equivalent</th><th>Gap it closes</th></tr>
+    <tr><td>Payer rules engine checks the claim <em>before</em> submission</td><td>Semantic validator + quality guard check the question <em>before</em> answering</td><td>Show the pre-answer scrub — don't hide it</td></tr>
+    <tr><td>Touchless Claim Rate</td><td><span class="hlp">Touchless Answer Rate</span> — % of questions answered governed, end-to-end, no manual fix</td><td>One autonomy number for the agent</td></tr>
+    <tr><td>Net collection rate as headline</td><td><span class="hl">Earned-not-collected + days-to-cash</span> — 86.8% on our template numbers</td><td>Payroll wedge becomes the finance headline</td></tr>
+    <tr><td>Denial root-cause loop feeds rules upstream</td><td>Feedback loop on answers (thumbs + reason → governance task)</td><td>The feedback loop missing from our code</td></tr>
+    <tr><td>Unified data model (provider, fees, charges, payer)</td><td>Finance semantic catalog</td><td>Finance's #1 gap: recruitment has one, finance doesn't</td></tr>
+    <tr><td>Claims export API → customer warehouse</td><td>The DE handover Jags owns (slide 10)</td><td>Agent reads a governed layer, never raw sources</td></tr>
+  </table>
+  <div class="foot"><span>The catalog is the product. The chat is the surface.</span><span>7 / 11</span></div>
+</section>
+
+<!-- 8 RCM VIEW V2 -->
+<section class="slide">
+  <div class="num">08</div>
+  <div class="kicker">Improved visualisation</div>
+  <h2>RCM View v2 — every chart answers one question, and says "so what"</h2>
+  <div style="display:flex; gap:24px; margin-top:10px;">
+    <img class="shot" src="rcm-view-v2-nov02.png" style="height:618px; width:auto;">
+    <div style="flex:1">
+      <div class="card" style="margin-bottom:16px"><h3>What's new vs v1</h3><ul>
+        <li><strong>Bridge bar</strong> — earned → collected at true scale</li>
+        <li><strong>Claim funnel</strong> — recruitment's stage conversion, finance edition</li>
+        <li><strong>A/R donut</strong> — aging composition at a glance</li>
+        <li><strong>Bars + cumulative line</strong> — the timeline overlap, fixed by design</li>
+        <li><strong>Drill-down / up / across</strong> follow-ups under the charts (Murali, Oct 26)</li>
+      </ul></div>
+      <div class="card accent"><h3>Rule for every visual</h3><p>No chart ships without its one-line takeaway printed under it — and every number carries a Governed / Template / Synthetic chip.</p></div>
+      <p style="font-size:16px; color:#94a3b8; margin-top:16px; line-height:1.5">→ I'll open the full v2 page live after this slide. All splits labelled synthetic; totals reconcile to the $190k gap.</p>
+    </div>
+  </div>
+  <div class="foot"><span>RCM View v2 — prototype, spreadsheet-backed next</span><span>8 / 11</span></div>
+</section>
+
+<!-- 9 ROADMAP -->
+<section class="slide">
+  <div class="num">09</div>
+  <div class="kicker">Improvements roadmap</div>
+  <h2>Murali's four first — then the UI layer — then Phase 1</h2>
+  <div class="grid3">
+    <div class="card red">
+      <span class="tag red">Now · Murali's four</span>
+      <ul>
+        <li>Fix cash timeline overlap</li>
+        <li>Growth dials → <strong>working sliders</strong> (admissions, lifetime, hours, rate)</li>
+        <li>What → So what ($ + date) → Next + owner, on every explanation</li>
+        <li>Out-of-scope → <strong>define-a-metric workflow</strong> + pending governance queue</li>
+      </ul>
+    </div>
+    <div class="card purple">
+      <span class="tag purple">Next · UI + RCM view</span>
+      <ul>
+        <li>Header persona cleanup ("Vasu Rao — Manager Access")</li>
+        <li>Governed / Template / Synthetic chips + feedback thumbs</li>
+        <li>Quarter filter · time-to-fill · scenario deep-link from chat</li>
+        <li>RCM View in the repo, spreadsheet-backed (claims + remittance + payroll)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <span class="tag blue">Phase 1 · Handover with Jags</span>
+      <ul>
+        <li>Warehouse connector + finance semantic catalog</li>
+        <li>QuickBooks + remittance feeds</li>
+        <li>Export · onboarding · self-serve publishing · revoke</li>
+        <li>Re-run Q1–Q5 on real data</li>
+      </ul>
+    </div>
+  </div>
+  <div class="say"><strong>Say:</strong> "We code these together in Cursor after this meeting, in this order — smallest visible win first: the timeline fix."</div>
+  <div class="foot"><span>Order matters: Bucket-1 decisions (slide 4) gate the metric work</span><span>9 / 11</span></div>
+</section>
+
+<!-- 10 DE WITH JAGS -->
+<section class="slide">
+  <div class="num">10</div>
+  <div class="kicker">Data engineering · with Jags</div>
+  <h2>Jags: I prototype the abstractions. Tell me what survives real data.</h2>
+  <div class="pipe" style="margin-top:24px">
+    <div class="step"><div class="s-t">Sources</div><div class="s-n">Sheets (now) · QuickBooks · EHR/EVV · Remittance 835 · Claims / Candid*</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">Ingestion — Jags</div><div class="s-n">Landing + staging, raw &amp; dated</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">Governed warehouse</div><div class="s-n">claims_lifecycle · remittance · denials · authorization · A/R aging · payroll</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">Semantic catalog</div><div class="s-n">Finance YAML (new) + recruitment YAML</div></div><div class="arr">→</div>
+    <div class="step"><div class="s-t">Agent — Paridhi</div><div class="s-n">Router → validator → executor → narrative</div></div>
+  </div>
+  <table>
+    <tr><th>Rank proposal</th><th>Integration</th><th>Why first / next</th></tr>
+    <tr><td><span class="hlg">1 + 2 + 5 first</span></td><td>Claims lifecycle · Remittance / posting · Payroll obligations</td><td>Together they make the earned-not-collected story — and every v2 chart — real, end to end</td></tr>
+    <tr><td>Then</td><td>Denial events (taxonomy ready) · Authorization</td><td>Feeds the funnel + denial charts; authorization ties to run-rate work</td></tr>
+    <tr><td>Foundation</td><td>Payer rules table — rules as data, versioned</td><td>The Candid lesson: rules change constantly; they can't live in code</td></tr>
+  </table>
+  <p style="font-size:15px; color:#64748b; margin-top:12px">* Candid only if OSpectra ever adopts it — a possible source, not a plan.</p>
+  <div class="foot"><span>Asks for Jags: grain + keys for claims · QuickBooks reality · handover package contents · ranking</span><span>10 / 11</span></div>
+</section>
+
+<!-- 11 DECISIONS + NEXT -->
+<section class="slide">
+  <div class="num">11</div>
+  <div class="kicker">Decisions + next steps</div>
+  <h2>Leave with owners, not another list</h2>
+  <div class="grid2">
+    <div class="card red">
+      <h3>Decisions to close today</h3>
+      <ul>
+        <li>$5M = annual gross revenue?</li>
+        <li>Canonical metric list — 11 or 8? The 12th?</li>
+        <li>Declare or cut the 2 undeclared metrics?</li>
+        <li>Finance / RCM in scope for me now?</li>
+        <li>Candid: evaluation, or reference model only?</li>
+        <li>Jags' ranking of the DE integrations</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h3>Next steps — sequenced</h3>
+      <ul>
+        <li><strong>Cursor, together:</strong> timeline fix → sliders → chips + feedback → define-a-metric workflow → RCM page</li>
+        <li><strong>With Jags:</strong> spreadsheet schemas for claims + remittance + payroll</li>
+        <li><strong>Then:</strong> finance semantic catalog draft → handover package</li>
+        <li><strong>Guardrail:</strong> no new question without a governed definition behind it</li>
+      </ul>
+    </div>
+  </div>
+  <div class="say"><strong>Close:</strong> "Governance is built. The charts now explain themselves. What I need from this room is the metric decision, the Candid call, and Jags' ranking — then we code."</div>
+  <div class="foot"><span>OSpectra Data Analyst Coworker · Nov 2, 2026</span><span>11 / 11</span></div>
+</section>
+
+</body>
+</html>

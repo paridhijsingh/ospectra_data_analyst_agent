@@ -1,12 +1,12 @@
 # PLAN — Data Analyst Coworker: graphs, ontologies, explainers, scenarios
 
 **Owner:** Paridhi · **Started:** Nov 2, 2026 · **Source of direction:** Murali's asks from the Oct 26–28 meeting notes + Candid Health / RCM research (Nov 1)
-**Companion docs (in Muse's goal files, not this repo):** capabilities-gaps-improvements inventory · graphs-ontologies-explainers improvement plan · Candid/RCM meeting prep · RCM View v2 mock
+**Supporting material:** everything for this plan lives in this repo under `docs/plan/` — Candid/RCM meeting prep · capabilities-gaps-improvements inventory · graphs-ontologies-explainers improvement plan · RCM View mocks (v1 + v2) · Nov 2 deck + speaker notes · pair-coding plan · Step 1 brief + patch · G2 sliders prompt · PLAN.md master prompt
 
 ## How we work this file
 - Build order is top to bottom within each phase. **Do not skip the gates** (Phase 0 / Phase 3 items need Murali's or Jags' input first).
 - When an item is finished: check its box `[x]`, add its date, and **add an explainer entry in the Log at the bottom** — what we did, *why* we did it, *how* it works, and the evidence (tests / screenshot). No log entry = not done.
-- Pair mode: Paridhi writes the code in Cursor; Muse explains the approach first and reviews the diff after.
+- Pair mode: the approach is agreed first, the code is written in Cursor, and the diff is reviewed before anything is committed.
 - Guardrails: no new chart without its one-line conclusion on screen · no new explainer without the action/follow-up slots filled · no new metric without a governed definition · numbers come from fixtures/lib, never typed into components.
 
 Status key: `[ ]` todo · `[~]` in progress / prototyped · `[x]` done + logged · 🔒 gated
@@ -62,7 +62,7 @@ Status key: `[ ]` todo · `[~]` in progress / prototyped · `[x]` done + logged 
 > **What:** one line. **Why:** the note/decision behind it. **How:** approach + files. **Evidence:** tests / screenshot / commit.
 
 ### [Prep] Candid Health + RCM research, capabilities/gaps inventory, RCM View v1+v2, 11-slide deck — Nov 1–2, 2026
-**What:** Research and design artifacts prepared outside the repo for the Nov 2 meeting. **Why:** Murali asked for a Candid Health exploration while exploring RCM, and for improvements/UI/DE direction with Jags. **How:** Candid framed as a reference model (payer rules engine; net collection rate; Touchless Claim Rate), home-care/HCBA fit explicitly unverified, pricing not published so never quoted; RCM view mocks reconcile all splits to the $190K earned-not-collected template story and are labelled Prototype / Synthetic / Not governed. **Evidence:** prep + inventory + plan docs and PNG/HTML mocks in the Muse goal files (`ospectra-analyst-agent-workflow-review-with-jags/files/`).
+**What:** Research and design artifacts prepared outside the repo for the Nov 2 meeting. **Why:** Murali asked for a Candid Health exploration while exploring RCM, and for improvements/UI/DE direction with Jags. **How:** Candid framed as a reference model (payer rules engine; net collection rate; Touchless Claim Rate), home-care/HCBA fit explicitly unverified, pricing not published so never quoted; RCM view mocks reconcile all splits to the $190K earned-not-collected template story and are labelled Prototype / Synthetic / Not governed. **Evidence:** prep + inventory + plan docs and HTML/PNG mocks in `docs/plan/`.
 
 ### [G1] Timeline fix — prototyped + verified Nov 2, 2026 (not yet committed)
-**What:** Date-proportional receipt timeline replacing the equal-column grid. **Why:** the old grid made Oct 5→6 (1 day) the same width as Oct 6→19 (13 days), and the +14 DAYS pill rendered obscured behind the obligation dot ("+14 ●'S" in the before screenshot). **How:** absolute positioning on an Oct 2–19 axis, staggered baseline label, bridge above the rail; layout-only, calculation lib untouched. **Evidence:** 131/131 tests pass with the patch; before/after screenshots + verified diff (`timeline-before-nov02.png`, `timeline-after-nov02.png`, `step1-timeline-fix.patch`) in the Muse goal files. *Move this to a committed entry with the commit hash once it lands in Cursor.*
+**What:** Date-proportional receipt timeline replacing the equal-column grid. **Why:** the old grid made Oct 5→6 (1 day) the same width as Oct 6→19 (13 days), and the +14 DAYS pill rendered obscured behind the obligation dot ("+14 ●'S" in the before screenshot). **How:** absolute positioning on an Oct 2–19 axis, staggered baseline label, bridge above the rail; layout-only, calculation lib untouched. **Evidence:** 131/131 tests pass with the patch; verified diff (`step1-timeline-fix.patch`) and the timeline fix brief in `docs/plan/`. *Move this to a committed entry with the commit hash once it lands in Cursor.*
