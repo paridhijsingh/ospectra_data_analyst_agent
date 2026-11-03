@@ -45,6 +45,15 @@ export function explainCashTimingComparison(
       'A reimbursement that moves past the obligation cutoff is no longer available before that obligation date. The reimbursement amount itself did not change.',
     boundedConclusion:
       `Under this synthetic timing scenario, reimbursement timing changes cash available before the obligation${result.scenarioShortfall > 0 ? ` and creates a scenario shortfall of ${formatCashUsd(result.scenarioShortfall)}` : ''}. The timing difference is not a financial loss.`,
+    comparativeInsight:
+      'Baseline: $105K available before the Oct 6 obligation. Delayed: $65K. The $40K timing difference is the entire risk — the amounts never change.',
+    nextAction:
+      "Chase Receipt B's payer before Oct 5; every day it slips past the cutoff leaves the $70K obligation uncovered.",
+    followUps: {
+      drillDown: 'Which payer owes Receipt B?',
+      drillUp: 'What is the total cash-timing risk this quarter?',
+      drillAcross: 'Which payroll dates does this pattern threaten next?',
+    },
     limitations: [
       'Synthetic data',
       'Scenario, not prediction',
@@ -150,6 +159,15 @@ export function explainGrowthTargetChart(
       'More time only lets the trajectory move toward its plateau. If the plateau is below the target, extending time alone cannot make the scenario reach the target.',
     boundedConclusion:
       `These are deterministic scenario results against ${targetLabel} annualized billed run-rate. They are not a recommendation of an admissions rate and not a business plan.`,
+    comparativeInsight:
+      'At the reference dials, 2 admissions/week plateaus at $5.68M annualized and crosses $5M at week 111; 1/week plateaus at $2.84M and never reaches it; 3/week crosses at week 46.',
+    nextAction:
+      'Hold admissions at or above about 1.76/week — below that pace the $5M run-rate is unreachable at the current lifetime, hours, and rate.',
+    followUps: {
+      drillDown: 'Which lever — admissions, lifetime, hours, or rate — moves the crossing week most?',
+      drillUp: 'What pace does the $10M target require?',
+      drillAcross: 'What does the growth path do to contribution margin once costs are applied?',
+    },
     limitations: [
       'Billed run-rate ≠ cash',
       'Target analysis ≠ recommendation',
@@ -175,6 +193,15 @@ export function explainOntologyGraph(plan: InvestigationPlan): GovernedExplainer
       ? `The path maps to ${metricCount} governed measurements, and some instance evidence is attached.`
       : `Governed measurements exist on this path (${metricCount} metric IDs). Actual evidence availability is separate and is not attached in v0.2. Metric availability is not evidence.`,
     boundedConclusion: plan.conclusionMessage,
+    comparativeInsight:
+      'Recruitment questions run on a governed semantic model with declared metrics; the finance concepts on this graph are connected, but finance has no governed metric catalog yet — that difference is exactly what this page makes visible.',
+    nextAction:
+      "Treat the graph as the agent's map: if a relationship is not on it, the agent should not claim it — it should say what evidence is missing instead.",
+    followUps: {
+      drillDown: 'What evidence supports the Claim to Payment relationship?',
+      drillUp: 'Which investigation plans walk this graph?',
+      drillAcross: 'Where does CashCollections connect back to the cash-timing scenario?',
+    },
     limitations: [
       'Relationship ≠ causation',
       'Metric available ≠ evidence',

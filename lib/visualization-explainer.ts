@@ -5,6 +5,12 @@
 
 export type ExplainerMode = 'visualization' | 'investigation';
 
+export type ExplainerFollowUps = {
+  drillDown: string;
+  drillUp: string;
+  drillAcross: string;
+};
+
 export type GovernedExplainer = {
   id: string;
   title: string;
@@ -13,8 +19,17 @@ export type GovernedExplainer = {
   whatItShows: string;
   whyItMatters: string;
   boundedConclusion: string;
+  comparativeInsight?: string;
+  nextAction?: string;
+  followUps?: ExplainerFollowUps;
   limitations: readonly string[];
 };
+
+export const explainerActionSlotLabels = {
+  comparativeInsight: 'Compared to baseline',
+  nextAction: 'Next action',
+  followUps: 'Ask next',
+} as const;
 
 export type ExplainerSlotKey =
   | 'whatYouAreLookingAt'

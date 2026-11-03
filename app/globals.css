@@ -367,4 +367,9 @@ button.od-node { appearance:none; }
 .ex-card-slots>div { display:grid; gap:2px; }
 .ex-card-slots dt { color:#7657cb; font-size:9px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
 .ex-card-slots dd { margin:0; color:#57525e; font-size:12px; line-height:1.4; }
+.ex-card-next-action { padding:8px 10px; border:1px solid #ddd6ef; border-radius:8px; background:#fff; }
+.ex-card-next-action dt { color:#5d34c9; }
+.ex-card-next-action dd { color:#24202d; font-weight:650; }
+.ex-card-followups { margin:0; padding-left:16px; display:grid; gap:4px; }
+.ex-card-followups span { color:#4e367f; font-weight:700; }
 .ex-card-limits { margin:10px 0 0; color:#918b9c; font-size:10px; line-height:1.35; }
