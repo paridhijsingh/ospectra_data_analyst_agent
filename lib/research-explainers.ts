@@ -141,6 +141,23 @@ export function explainCensusChart(scenarios: readonly PaperRunRateScenario[]): 
   };
 }
 
+function growthTargetComparativeInsight(scenarios: readonly GrowthTargetScenario[]): string {
+  const byN = Object.fromEntries(scenarios.map((scenario) => [scenario.n, scenario]));
+  const n1 = byN[1];
+  const n2 = byN[2];
+  const n3 = byN[3];
+  const plateauM = (amount: number) =>
+    `$${(amount / 1_000_000).toLocaleString('en-US', { maximumFractionDigits: 2, minimumFractionDigits: 2 })}M`;
+  const n2Plateau = n2 ? plateauM(n2.analysis.annualizedPlateau) : '—';
+  const n1Plateau = n1 ? plateauM(n1.analysis.annualizedPlateau) : '—';
+  const n2Week = n2?.analysis.firstReachedWeek;
+  const n3Week = n3?.analysis.firstReachedWeek;
+  const n2Crossing =
+    n2Week != null ? `crosses $5M at week ${n2Week}` : 'does not cross $5M in this horizon';
+  const n3Crossing = n3Week != null ? `crosses at week ${n3Week}` : 'does not cross $5M in this horizon';
+  return `At the reference dials, 2 admissions/week plateaus at ${n2Plateau} annualized and ${n2Crossing}; 1/week plateaus at ${n1Plateau} and never reaches it; 3/week ${n3Crossing}.`;
+}
+
 export function explainGrowthTargetChart(
   scenarios: readonly GrowthTargetScenario[],
   targetAnnualizedRunRate: number,
@@ -159,8 +176,7 @@ export function explainGrowthTargetChart(
       'More time only lets the trajectory move toward its plateau. If the plateau is below the target, extending time alone cannot make the scenario reach the target.',
     boundedConclusion:
       `These are deterministic scenario results against ${targetLabel} annualized billed run-rate. They are not a recommendation of an admissions rate and not a business plan.`,
-    comparativeInsight:
-      'At the reference dials, 2 admissions/week plateaus at $5.68M annualized and crosses $5M at week 111; 1/week plateaus at $2.84M and never reaches it; 3/week crosses at week 46.',
+    comparativeInsight: growthTargetComparativeInsight(scenarios),
     nextAction:
       'Hold admissions at or above about 1.76/week — below that pace the $5M run-rate is unreachable at the current lifetime, hours, and rate.',
     followUps: {

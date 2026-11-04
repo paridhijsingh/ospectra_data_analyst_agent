@@ -22,7 +22,7 @@ Implement PLAN.md items E1 and E2: extend the explainer schema and backfill thre
    followUps: drillDown "Which payer owes Receipt B?", drillUp "What is the total cash-timing risk this quarter?", drillAcross "Which payroll dates does this pattern threaten next?"
 
    b) explainGrowthTargetChart (recruitment/growth half):
-   comparativeInsight: "At the reference dials, 2 admissions/week plateaus at $5.68M annualized and crosses $5M at week 111; 1/week plateaus at $2.84M and never reaches it; 3/week crosses at week 46."
+   comparativeInsight: generated from engine firstReachedWeek / plateaus (defaults: 2/week plateaus at $5.68M and crosses $5M at week 110; 1/week plateaus at $2.84M and never reaches it; 3/week crosses at week 46). Do not hardcode the crossing week.
    nextAction: "Hold admissions at or above about 1.76/week — below that pace the $5M run-rate is unreachable at the current lifetime, hours, and rate."
    followUps: drillDown "Which lever — admissions, lifetime, hours, or rate — moves the crossing week most?", drillUp "What pace does the $10M target require?", drillAcross "What does the growth path do to contribution margin once costs are applied?"
 

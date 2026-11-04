@@ -95,9 +95,9 @@ Listed in required order: every Partial · every template answer that looks gove
 
 ### Template-sourced answers that look governed on screen
 All **25** Financial Agent answers are Static templates, but the UI presents them as governed:
-- Header chip: “Governed semantic layer · 25 approved questions · 13 source domains”.
-- Question dialog: “Select an approved question from the finance semantic layer.”
-- Orchestrator semantic step for every supported answer: “Matched approved metric(s): …”.
+- Header chip (pre-honesty fix): “Governed semantic layer · 25 approved questions · 13 source domains” — **updated:** finance now shows “Static template — not computed, not governed”.
+- Question dialog (pre-honesty fix): “Select an approved question from the finance semantic layer.” — **updated:** finance dialog no longer claims a semantic layer.
+- Orchestrator semantic step (pre-honesty fix): “Matched approved metric(s): …” — **updated:** finance supported answers show “Static template — not computed, not governed”.
 - Answer meta: “Quality checks passed” alongside “Synthetic data”.
 - Registry comment in code: “There is no Financial semantic catalog” — contradicts on-screen framing.
 
@@ -133,7 +133,7 @@ Grading rules applied: (a) adjacent ≠ answer; (b) $5M growth-target crossing i
 
 | # | Question (exact) | Status | Where tested | Source | Adjacent capability (not an answer) |
 |---|------------------|--------|--------------|--------|-------------------------------------|
-| 1 | Is the company breaking even? If not, when is it projected to break even? | Blocked | chat (Financial Agent) → unsupported; scenario page inspected for adjacency only | None | Growth Target `/scenario-demo`: `requiredSteadyStateAdmissions` ≈ **1.76/week** and the **$5M annualized billed run-rate** crossing (week 111 at defaults). Docs sometimes call 1.76/week a “break-even pace,” but it is a **revenue-target** pace, not P&L break-even (rule b). |
+| 1 | Is the company breaking even? If not, when is it projected to break even? | Blocked | chat (Financial Agent) → unsupported; scenario page inspected for adjacency only | None | Growth Target `/scenario-demo`: `requiredSteadyStateAdmissions` ≈ **1.76/week** and the **$5M annualized billed run-rate** crossing (week 110 at defaults). The ~1.76/week figure is the **required pace to reach $5M** (revenue-target), not P&L break-even (rule b). |
 | 2 | What is the debt service cost, and how much is it impacting our revenue and profit? | Blocked | chat → unsupported | None | None in product. No debt fields/templates in codebase. |
 | 3 | Is the debt growing, and what is the current trend? | Blocked | chat → unsupported | None | None. (Recruitment agent can false-match “trend” phrasing to applications-trend if the wrong agent is selected — not a finance answer.) |
 | 4 | Is there a genuine cash-flow problem? If so, what is the current gap and how is it trending? | Blocked | chat → unsupported | None | Cash Timing scenario shortfall ($40K timing / $5K scenario shortfall on synthetic fixture); Financial templates `collections-gap` / `cash-forecast` / `cash-coverage` answer **different** wordings, not this exact question. |
@@ -158,7 +158,7 @@ Grading rules applied: (a) adjacent ≠ answer; (b) $5M growth-target crossing i
 ### Demo risks (Sep 24 set only)
 
 1. **All 10 Sep 24 questions are Blocked** in Financial Agent chat as worded — the live demo cannot answer Murali’s Sep 24 finance ask from the 25-question catalog.
-2. **Q1 confusion risk:** Growth Target / docs label ~1.76/week as “break-even pace,” but it is the **$5M revenue run-rate** requirement — using that chart to answer Q1 would be incorrect (rule b). Product correctly blocks the chat wording today.
+2. **Q1 confusion risk:** Growth Target / docs label ~1.76/week as the **required pace to reach $5M** (revenue run-rate), not P&L break-even — using that chart to answer Q1 would be incorrect (rule b). Product correctly blocks the chat wording today.
 3. **Q2 / Q3 / Q10 debt:** correctly Blocked; no debt data. Demo must not invent debt answers.
 4. **Wrong-agent false match:** on Recruitment Agent, “debt growing… trend” / “cash-flow… trending” can route to **applications-trend** — keep Financial Agent selected.
 5. **Q5/Q6 vocabulary risk:** plan docs mention Cost per Productive Care Hour / Care Coverage / Capacity Coverage as nearby concepts; none are shipped — do not present them as answers.

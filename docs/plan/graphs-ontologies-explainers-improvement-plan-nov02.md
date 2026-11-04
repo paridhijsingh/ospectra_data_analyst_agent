@@ -29,7 +29,7 @@ Date-proportional points, staggered Oct 5 label, bridge above the rail. 131/131 
 
 ### 1.2 Growth Target + Run-Rate charts (N3, N7)
 - Wire the four dials (admissions `n`, lifetime `L`, hours `h`, rate `p`) as sliders — engine already accepts them: `analyzeRunRateTarget(input)`, `lib/revenue-run-rate-target.ts:58`; Slider component exists at `components/ui/slider.tsx`. Chart + $5M date recompute from state.
-- **Annotate the crossing**: a labelled dot where the selected series crosses the $5M `ReferenceLine` ("reaches $5M run-rate — week 111"), instead of making the viewer eyeball it. This is the Kornacki move: the chart states its own conclusion.
+- **Annotate the crossing**: a labelled dot where the selected series crosses the $5M `ReferenceLine` ("reaches $5M run-rate — week 110" at defaults), instead of making the viewer eyeball it. This is the Kornacki move: the chart states its own conclusion.
 - Add the **2.5 admissions/week comparison case** (closes the Q3 "partial" from Present Data) as a toggleable series once sliders land.
 - Census chart: add a plateau `ReferenceLine` + label (104 clients at 2/wk) — plateau is currently invisible.
 - **Done when:** dragging admissions 2 → 3 updates the chart, the crossing label, and the explainer in the same render; the three verified cases (1/2/3 per week) still reproduce.

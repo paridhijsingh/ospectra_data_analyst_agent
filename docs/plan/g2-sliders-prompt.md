@@ -1,6 +1,6 @@
 # G2 — Cursor prompt: growth-target dials as working sliders
 Saved Nov 2, 2026. Companion to PLAN.md item G2 in the repo.
-Verified reference numbers (defaults L=52, h=30, p=35): plateaus — 1/wk $2,839,200 · 2/wk $5,678,400 (first reaches $5M at week 111) · 3/wk $8,517,600 (week 46) · required admissions ≈ 1.76/week.
+Verified reference numbers (defaults L=52, h=30, p=35): plateaus — 1/wk $2,839,200 · 2/wk $5,678,400 (first reaches $5M at week 110) · 3/wk $8,517,600 (week 46) · required admissions ≈ 1.76/week.
 
 ---
 PROMPT (paste into Cursor):
@@ -24,7 +24,7 @@ Changes:
 6. Explainer: keep passing the three standard scenarios to explainGrowthTargetChart, unchanged.
 
 Acceptance checks — verify all of these and report the results:
-- At default dial values the page is numerically identical to today: plateaus $2,839,200 / $5,678,400 / $8,517,600, baseline first reached week 111, 3/week week 46, required admissions ≈ 1.76/week.
+- At default dial values the page is numerically identical to today: plateaus $2,839,200 / $5,678,400 / $8,517,600, baseline first reached week 110, 3/week week 46, required admissions ≈ 1.76/week.
 - Moving the L slider to 26 halves the plateaus; moving p to $50 raises them proportionally; the custom series and the ReferenceDot move accordingly and disappear/relabel correctly when the baseline becomes UNREACHABLE.
 - npm test: all existing tests still pass. Add tests for the parameterized lib functions (e.g. scenarios built with L=26 have half the plateau of L=52 at the same n, h, p).
 - Show me the full diff before I commit.

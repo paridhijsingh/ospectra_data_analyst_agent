@@ -56,7 +56,11 @@ export function runOrchestrator(agentId:AgentId,question:string):OrchestratedRes
     },
     trace:[
       {id:'router',label:'Intent router',detail:`Routed to the ${domain} analyst and classified ${answer.intent.replaceAll('_',' ')}.`,status:'complete'},
-      {id:'semantic',label:'Semantic validator',detail:answer.supported?`Matched approved metric(s): ${answer.metricIds.join(', ')}.`:'No approved metric matched the request.',status},
+      {id:'semantic',label:'Semantic validator',detail:answer.supported
+        ?(agentId==='financial'
+          ?'Static template — not computed, not governed'
+          :`Matched approved metric(s): ${answer.metricIds.join(', ')}.`)
+        :'No approved metric matched the request.',status},
       {id:'executor',label:'Metric executor',detail:answer.supported?`Executed a read-only plan across ${answer.sources.length} synthetic source domains.`:'Execution stopped by policy.',status},
       {id:'quality',label:'Quality guard',detail:answer.supported?'Passed freshness, field-policy, denominator, and traceability checks.':'No result was released.',status},
       {id:'narrative',label:'Narrative composer',detail:answer.supported?'Assembled the finding, driver, impact, and recommended next investigation.':'Returned a governed boundary message.',status},

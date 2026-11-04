@@ -65,7 +65,7 @@ Derived consistency within templates (not separate demo claims): A9 parts sum to
 | C8 | Annualized plateaus: n=1 **$2,839,200** (~**$2.84M**); n=2 **$5,678,400** (~**$5.68M**); n=3 **$8,517,600** (~**$8.52M**) | ×52 · growth explainer / docs | Annualized billed run-rate | Steady-state annualized · scenario company |
 | C9 | **$5,000,000** target annualized billed run-rate (UI also offers **$10M** + custom) | `growthTargetReference.targetAnnualizedRunRate` · research question wording · TARGET_PRESETS | Caller-defined annualized **billed run-rate** threshold — **not** defined as P&L break-even; PLAN **D1** still open | Annualized · scenario · definition unresolved |
 | C10 | Engine first reach of $5M at defaults: **week 110** (n=2); n=3 **week 46**; n=1 unreachable | `analyzeRunRateTarget` · Growth Target UI crossing label uses `firstReachedWeek` | First week weekly billed ≥ $5M/52 | Scenario trajectory from t=0 |
-| C11 | Hardcoded narrative “crosses $5M at **week 111**” | `research-explainers.ts` comparativeInsight; e1 prompt; g2 demo script; several `docs/plan/*` | Same crossing as C10, but **111** not **110** | Docs / fixed explainer copy |
+| C11 | Crossing week in narrative | Explainer comparativeInsight is now generated from engine `firstReachedWeek` (**110** at defaults); docs/plan updated off hardcoded **111** | Same as C10 | Docs / explainer (resolved Nov 4 honesty pass) |
 | C12 | Required steady-state admissions **≈ 1.761…/week** (~**1.76**/week) for $5M at L,h,p defaults | `requiredSteadyStateAdmissions` · nextAction copy | Minimum n so plateau ≥ $5M | Steady-state · same levers |
 | C13 | Cost defaults: direct **65%** of billed; variable back-office **8%**; fixed **$25,000**/week | `defaultRunRateCostAssumptions` · Growth Target dials | Modeled cost overlay (not accounting P&L) | Weekly · scenario |
 | C14 | At n=2 plateau with C13: direct **$70,980**; variable **$8,736**; fixed **$25,000**; total cost **$104,716**; contribution **$4,484**; margin ≈ **4.11%** | `applyRunRateCosts` at plateau | Modeled weekly contribution | Steady-state week · scenario |
@@ -78,13 +78,13 @@ Derived consistency within templates (not separate demo claims): A9 parts sum to
 
 | # | Value | Where | Claims to measure | Period / scope |
 |---|-------|--------|-------------------|----------------|
-| D1 | Earned **$1.44M** / collected **$1.25M** / gap **$190k**; net collection rate **86.8%** | `docs/plan/rcm-view-mock-nov02.html`, `rcm-view-v2-nov02.html`, `presentation-nov02.html` | Same template story as A1–A3, with **rounded** gap | “This period” (**implied** month) · prototype |
-| D2 | Aging **of the $190k gap**: 0–30 **$82k**, 31–60 **$54k**, 61–90 **$31k**, 90+ **$23k** (sum $190k); “**$108k** (57%) already over 30 days” | RCM mocks | Split of earned-not-collected, **not** full open AR | Same period as D1 · prototype |
+| D1 | Earned **$1,438K** / collected **$1,254K** / gap **$184K**; net collection rate **86.8%** | `docs/plan/rcm-view-mock-nov02.html`, `rcm-view-v2-nov02.html`, `presentation-nov02.html` | Same template story as A1–A3 (exact pair; gap no longer rounded to $190k) | “This period” (**implied** month) · prototype |
+| D2 | Aging of the earned-not-collected gap: 0–30 **$82k**, 31–60 **$54k**, 61–90 **$31k**, 90+ **$23k** (bucket $ unchanged; separate reconciliation from $184K gap); “**$108k** already over 30 days” | RCM mocks | Split of earned-not-collected, **not** full open AR | Same period as D1 · prototype |
 | D3 | Funnel (v2): Authorized **$1.58M** → Submitted **$1.44M** (91%) → Accepted **$1.31M** (91%) → Paid **$1.25M** (95%) | `rcm-view-v2-nov02.html` | Stage conversion $ | Same period · prototype |
 | D4 | Weekly expected collections bars: **62, 48, 71, 40, 55, 66** ($k); cum **$342k**; Wk4 = **$40k** risk claim | RCM v2 timeline | Near-term expected cash by week | **6-week** illustrative window · prototype |
 | D5 | Denial % mix: Documentation **34%**, Authorization **26%**, Eligibility **18%**, Coding **12%**, Timely filing **10%** | RCM mocks | Denial root-cause mix | Synthetic mix · **not** $ drivers in A10 |
 | D6 | Action-table claims **$40,000** / **$23,000** / **$31,000** tied to payroll vs **$105k** pre-obligation cash | RCM mocks | Bridges monthly gap story to cash-timing B\* | Mixed: period AR + Oct scenario cash |
-| D7 | PLAN / meeting docs restate **$5M**, **1.76**/wk, plateaus, **$190K** earned-not-collected, G3 **$70K** obligation line | `PLAN.md`, g2/e1 prompts, capabilities docs | Narrative restatements of A/B/C | As cited |
+| D7 | PLAN / meeting docs restate **$5M**, **1.76**/wk, plateaus, **$184K** earned-not-collected ($1,438K − $1,254K), G3 **$70K** obligation line | `PLAN.md`, g2/e1 prompts, capabilities docs | Narrative restatements of A/B/C | As cited |
 
 Ontology research (`lib/finance-ontology*.ts`, ontology demo UI): **no dollar / % / count financial literals** — relationship/metric-id only.
 
@@ -94,10 +94,10 @@ Ontology research (`lib/finance-ontology*.ts`, ontology demo UI): **no dollar / 
 
 Proposals only — **not applied**.
 
-### Conflict 1 — Collections gap **$184K** (template data/title) vs **$190K** (RCM / presentation)
+### Conflict 1 — Collections gap **$184K** (template data/title) vs **$190K** (RCM / presentation) — resolved Nov 4
 
-- **Clash:** Chart values 1438−1254 = **184**; rounded displays $1.44M − $1.25M = **$190K**. Demo path uses both.
-- **Propose:** Define the governed monthly pair as exact **$1,438,000 earned / $1,254,000 collected / $184,000 gap**. Treat **$190K** as a deprecated rounded headline for prototypes, or regenerate RCM copy to $184K. Do not put both in the synthetic ledger.
+- **Was:** Chart values 1438−1254 = **184**; rounded displays $1.44M − $1.25M = **$190K**.
+- **Resolution:** Docs/plan + RCM mock gap headlines use **$184K** with the exact pair **$1,438K earned − $1,254K collected = $184K**. Aging bucket dollars left unchanged (separate reconciliation). Template data in `lib/financial-metrics.ts` untouched.
 
 ### Conflict 2 — “Available cash” **$5.18M** (6 branches) vs forecast **Today $3.86M** vs cash-timing opening **$50K**
 
@@ -112,22 +112,22 @@ Proposals only — **not applied**.
 - **Clash:** Same “company” cannot both earn ~$1.44M in a single month and plateau at only $5.68M/year billed run-rate.
 - **Propose:** Either (a) Financial Agent month is **multi-branch current operations** at a higher scale, and growth-target is an **illustrative single-configuration / paper model** with an explicit disclaimer that it is **not** the same census as the agent templates; or (b) **rescale** one family in a later phase so monthly earned ≈ annualized_run_rate/12 for the chosen steady state. Phase 0 recommendation: **(a) separate scopes in the dataset metadata** until D1 + scale decision land.
 
-### Conflict 4 — Full open AR **$2.446M** (template aging) vs RCM aging that totals only the **$190K** gap
+### Conflict 4 — Full open AR **$2.446M** (template aging) vs RCM aging of the month gap
 
 - **Clash:** Both are labelled “A/R aging” in demo materials; buckets and totals differ by an order of magnitude.
 - **Propose:**  
   - **Open AR aging (agent)** = A11/A12 (**$2.446M** total; **$684K >60d**).  
-  - **RCM mock buckets** = aging of **earned-not-collected for the current month only** (gap A3/D1), not open AR. Rename in future copy to “aging of this month’s uncollected earned,” not “A/R aging.”
+  - **RCM mock buckets** = aging of **earned-not-collected for the current month only** (gap **$184K** = $1,438K − $1,254K), not open AR. Bucket dollar amounts still need a separate reconciliation to sum to $184K.
 
 ### Conflict 5 — Gross margin **~29.1%** (template) vs modeled contribution margin **~4.1%** (cost overlay at n=2 plateau)
 
 - **Clash:** Both look like “margin on billed revenue” if scopes are ignored.
 - **Propose:** Template margin = **(billed − direct caregiver payroll) / billed** for historical months (no fixed/$ back-office). Growth-target overlay = **scenario contribution after 65% + 8% + $25K/wk fixed**. Keep as **two metrics**; synthetic dataset must not present one number under both labels.
 
-### Conflict 6 — Engine crossing **week 110** vs narrative / explainer **week 111**
+### Conflict 6 — Engine crossing **week 110** vs narrative / explainer **week 111** — resolved Nov 4
 
-- **Clash:** Live Growth Target UI / `analyzeRunRateTarget` report **110**; hardcoded comparativeInsight and several plan docs say **111**.
-- **Propose:** Treat **week 110** as source of truth (engine). Explainer fixed string and docs are stale copy — reconcile in a later edit pass; dataset generation must not invent a week-111 fact.
+- **Was:** Live Growth Target UI / `analyzeRunRateTarget` report **110**; hardcoded comparativeInsight and several plan docs said **111**.
+- **Resolution:** Explainer comparativeInsight is generated from engine `firstReachedWeek`; docs/plan crossing week copy updated to **110**.
 
 ### Conflict 7 — Denial dollars (A10) vs denial **percent** mix (D5)
 
@@ -146,10 +146,10 @@ Proposals only — **not applied**.
 1. **$5M definition (PLAN D1):** Is $5M annual gross revenue, annualized billed run-rate, or something else? All growth-target math currently treats it as **annualized billed run-rate**.
 2. **One company scale:** Are Financial Agent monthly templates (A\*) and the Cespedes run-rate / growth-target model (C\*) the **same synthetic company**? If yes, which family’s scale wins; if no, name two scopes in the dataset.
 3. **Canonical cash stock:** Which figure is enterprise available cash for the demo company — **$5.18M**, **$3.86M**, or neither until forecast is rebuilt from ledger?
-4. **Collections headline:** Publish **$184K** or **$190K** as the earned-not-collected gap (see Conflict 1).
-5. **AR story split:** Confirm open AR (**$2.446M**) vs month-gap aging (**$190K/$184K** split) as two distinct objects (Conflict 4).
+4. **Collections headline:** ~~Publish $184K or $190K~~ — **decided:** **$184K** ($1,438K − $1,254K).
+5. **AR story split:** Confirm open AR (**$2.446M**) vs month-gap aging (illustrative buckets vs **$184K** gap) as two distinct objects (Conflict 4); bucket $ still need reconciliation.
 6. **Cash-timing vignette scope:** Confirm B\* is a **payroll-pool / single-obligation** story (linked by the $40K claim) and **not** enterprise cash.
-7. **Crossing week:** Confirm demo canon is engine **week 110** (Conflict 6); allow later copy fixes without blocking dataset design.
+7. **Crossing week:** ~~Confirm demo canon is engine week 110~~ — **decided:** engine **week 110**; explainer/docs updated.
 8. **Margin dualism:** Confirm template gross margin vs scenario contribution margin remain separate metrics (Conflict 5).
 9. **$10M / custom target in UI:** Is the default demo path locked to **$5M** only for dataset consistency, with $10M treated as interactive what-if only?
 

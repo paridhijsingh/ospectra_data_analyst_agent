@@ -21,7 +21,7 @@
    - Q3: Partial — scenario page only; no 2.5-admissions comparison case
    - Q8: No as asked — volume + conversion by source only; no fill speed
    - Q6: No — no LTV/CAC · Q7: No — no second-branch parameter
-7. **Scenario planning exists** as a separate page: admissions → census → revenue over time, growth-target math verified (1/wk plateaus ~$54.6k/wk; 2/wk → ~$109.2k/wk, ~$5.68M/yr by wk 111; 3/wk reaches $5M run-rate wk 46; ~1.76/wk is the break-even pace)
+7. **Scenario planning exists** as a separate page: admissions → census → revenue over time, growth-target math verified (1/wk plateaus ~$54.6k/wk; 2/wk → ~$109.2k/wk, ~$5.68M/yr by wk 110; 3/wk reaches $5M run-rate wk 46; ~1.76/wk is the required pace to reach $5M)
 
 ### Finance half (exists, but templated)
 8. **25 financial questions** — answered from **static templates** (e.g. $1.44M earned / $1.25M collected), not computed. Looks governed, is not.
@@ -76,7 +76,7 @@ Warehouse connector + financial semantic model · QuickBooks connection (blocks 
 Chart choice is an explanation choice — each chart below answers one question and carries a "so what" line on screen:
 | Visual | Question it answers | Why this chart |
 |---|---|---|
-| **Waterfall: Earned → Collected** | Where did the $190k go between earning and collecting? | A bar total hides the leak; a waterfall *is* the leak |
+| **Waterfall: Earned → Collected** | Where did the $184K go between earning and collecting? ($1,438K earned − $1,254K collected) | A bar total hides the leak; a waterfall *is* the leak |
 | **Claim funnel: Authorized → Submitted → Accepted → Paid** | Where do claims fall out of the cycle? | Mirrors recruitment stage conversion — same mental model, finance edition |
 | **Donut: A/R aging composition** | How old is the uncollected money? | Composition at a glance; pairs with the aging bars for exact $ |
 | **Cumulative cash curve vs payroll obligations** | Will cash stay above obligations, week by week? | Fixes the timeline-overlap problem by design: two lines, crossing point is the story |

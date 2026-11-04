@@ -34,7 +34,7 @@ Revenue Cycle Management = every financial step from intake to cash:
 7. **Denials + A/R follow-up** — root-cause by payer + reason, appeal / resubmit inside the window, A/R aging
 8. **Cash timing decision** — earned ≠ collected. This is *your* wedge: a late reimbursement threatens a dated payroll obligation.
 
-**Your line connecting it to your Oct work:** "Our demo already has the $190k earned-not-collected story — $1.44M earned vs $1.25M collected, and one $40k reimbursement 14 days late leaves us $40k short against $105k pre-obligation cash. Candid's whole product is trying to shrink that gap at steps 4–7. Our agent's job is to *make that gap visible early enough to act* — chase before the due date, hold a buffer above obligations."
+**Your line connecting it to your Oct work:** "Our demo already has the earned-not-collected story — $1,438K earned − $1,254K collected = $184K, and one $40k reimbursement 14 days late leaves us $40k short against $105k pre-obligation cash. Candid's whole product is trying to shrink that gap at steps 4–7. Our agent's job is to *make that gap visible early enough to act* — chase before the due date, hold a buffer above obligations."
 
 ### Fit gap — say it before Murali asks
 Candid is built for medical groups / digital health billing on medical claims. I found **no public evidence** it handles home-care-specific RCM: HCBA waiver billing, EVV reconciliation, OASIS-driven reimbursement, per-diem / hourly home-care claims. Questions to verify before anyone treats it as a fit:
