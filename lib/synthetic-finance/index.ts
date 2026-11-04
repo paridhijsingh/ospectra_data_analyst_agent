@@ -20,3 +20,5 @@ export type {
   MonthlyBalances,
   MonthKey,
 } from './types';
+
+export * from './compute';
