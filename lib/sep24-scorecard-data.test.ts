@@ -10,7 +10,7 @@ import {
   sep24ScorecardReports,
 } from './sep24-scorecard-data';
 
-describe('Sep 24 Scorecard content', () => {
+describe('Scorecard content (the questions Murali gave)', () => {
   it('lists all 16 board items plus 5 still-open items', () => {
     expect(sep24ScorecardQuestions).toHaveLength(10);
     expect(sep24ScorecardReports).toHaveLength(6);
@@ -21,6 +21,7 @@ describe('Sep 24 Scorecard content', () => {
   it('renders every board and open item with the honesty header', () => {
     const content = renderSep24ScorecardContent();
 
+    expect(content).toContain('Scorecard — the questions Murali gave');
     expect(content).toContain(SEP24_SCORECARD_HEADER);
     expect(content).toContain('Still open');
 

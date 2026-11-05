@@ -116,9 +116,9 @@ Highest-demo-risk examples (template mismatch **and** governed framing): **denia
 
 ---
 
-## Murali Sep 24 set
+## The questions Murali gave
 
-**Scope:** Verification only of Murali’s Sep 24, 2026 demo ask (10 questions + 6 reports). Exact wording tested. No new metrics built or defined in this run.  
+**Scope:** Verification only of the questions Murali gave (10 questions + 6 reports). Exact wording tested. No new metrics built or defined in this run.  
 **Paths tested:** Financial Agent chat (`runOrchestrator('financial', …)` / `answerFinancialQuestion`); recruitment path checked only to detect false routing; scenario pages (`/scenario-demo` Cash Timing, Revenue Run-Rate, Growth Target); ontology/RCM mocks under `docs/plan/`; Design Studio export `OSpectra Data Analyst Agent.dc (5).html` (outside the agent app).  
 **Debt check:** Repo-wide search found **no** `debt` / `debt service` data or templates. Q2, Q3, and debt ratios in Q10 all return `supported: false` on the Financial Agent — matches expectation; no unexpected debt answer found.
 
@@ -155,17 +155,17 @@ Grading rules applied: (a) adjacent ≠ answer; (b) $5M growth-target crossing i
 | Accounts Payable | Blocked | nowhere | None | Template source lists mention `accounts_payable` as a domain string only; no AP report UI. |
 | 12-month Forecasts | Partial | chat (`cash-forecast` = **60-day** template for other questions); Growth Target multi-year run-rate chart; DS HTML forecast comparison | Static template (60-day) + Synthetic scenario chart + prototype outside agent | No standard 12-month forecast report in agent. Closest: 60-day cash template; Growth Target trajectory (billed run-rate, not forecast statements). |
 
-### Demo risks (Sep 24 set only)
+### Demo risks (the questions Murali gave only)
 
-1. **All 10 Sep 24 questions are Blocked** in Financial Agent chat as worded — the live demo cannot answer Murali’s Sep 24 finance ask from the 25-question catalog.
+1. **All 10 of the questions Murali gave are Blocked** in Financial Agent chat as worded — the live demo cannot answer Murali’s finance ask from the 25-question catalog.
 2. **Q1 confusion risk:** Growth Target / docs label ~1.76/week as the **required pace to reach $5M** (revenue run-rate), not P&L break-even — using that chart to answer Q1 would be incorrect (rule b). Product correctly blocks the chat wording today.
 3. **Q2 / Q3 / Q10 debt:** correctly Blocked; no debt data. Demo must not invent debt answers.
 4. **Wrong-agent false match:** on Recruitment Agent, “debt growing… trend” / “cash-flow… trending” can route to **applications-trend** — keep Financial Agent selected.
 5. **Q5/Q6 vocabulary risk:** plan docs mention Cost per Productive Care Hour / Care Coverage / Capacity Coverage as nearby concepts; none are shipped — do not present them as answers.
 6. **Reports:** no standard IS / BS / CFS / AP / 12-month forecast in the agent. AR aging exists only as a **catalog template** (different question) plus **outside-agent RCM mocks** (Partial). Presenting mocks as the agent’s reports would oversell.
-7. **Catalog vs Sep 24 gap:** existing Partial catalog items (e.g. denial-scenario, auth-scenario) still do not cover these 10 questions.
+7. **Catalog vs the questions Murali gave gap:** existing Partial catalog items (e.g. denial-scenario, auth-scenario) still do not cover these 10 questions.
 
-### Harness evidence (Sep 24)
+### Harness evidence (the questions Murali gave)
 - Each of the 10 exact prompts → `runOrchestrator('financial', prompt)` → `supported: false`, `questionId: unsupported`.
 - Debt search: no `debt` / `debt service` matches under app/lib/components (excluding this verification narrative).
 - Q2, Q3, Q10 debt portions: Blocked with source None (expected).

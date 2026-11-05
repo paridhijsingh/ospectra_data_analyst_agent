@@ -1,5 +1,5 @@
 /**
- * Static Sep 24 scorecard board for the Financial Agent.
+ * Static scorecard board for the Financial Agent (the questions Murali gave).
  * Statuses are data only — this module does not call compute.
  */
 
@@ -204,7 +204,7 @@ export const sep24ScorecardBoardItems = [
 /** Plain-text document used by the scorecard view and content tests (no React, no compute). */
 export function renderSep24ScorecardContent(): string {
   const lines: string[] = [
-    'Sep 24 Scorecard',
+    'Scorecard — the questions Murali gave',
     SEP24_SCORECARD_HEADER,
     '',
     'Questions',

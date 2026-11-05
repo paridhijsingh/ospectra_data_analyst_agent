@@ -17,8 +17,8 @@ export function Sep24ScorecardView({ onAskQuestion, onOpenReports }: Sep24Scorec
     <div className="os-scorecard">
       <div className="os-scorecard-head">
         <div>
-          <strong>Sep 24 Scorecard</strong>
-          <p>Murali&apos;s Sep 24 set — honest status against the Financial Agent wiring.</p>
+          <strong>Scorecard — the questions Murali gave</strong>
+          <p>Murali&apos;s questions — honest status against the Financial Agent wiring.</p>
         </div>
         <span className="os-scorecard-badge">{SEP24_SCORECARD_HEADER}</span>
       </div>

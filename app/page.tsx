@@ -85,7 +85,7 @@ export default function HomePage(){
   const showReports=agentId==='financial'&&financeSurface==='reports';
   const showScorecard=agentId==='financial'&&financeSurface==='scorecard';
   const chatActive=agentId!=='financial'||financeSurface==='chat';
-  const financeHeader=showReports?'OSpectra / Reports':showScorecard?'OSpectra / Sep 24 Scorecard':`OSpectra / Ask ${agent.name}`;
+  const financeHeader=showReports?'OSpectra / Reports':showScorecard?'OSpectra / Scorecard':`OSpectra / Ask ${agent.name}`;
   const openScorecardQuestion=(prompt:string)=>{setAgentId('financial');setSelected((current)=>({...current,financial:prompt}));setShowLineage(false);setFinanceSurface('chat');};
   const openScorecardReports=()=>{setAgentId('financial');setFinanceSurface('reports');};
 
@@ -94,7 +94,7 @@ export default function HomePage(){
       <button type="button" className="os-nav"><Home size={17}/><span>Home</span></button>
       <button type="button" className={`os-nav ${chatActive?'active':''}`} onClick={()=>setFinanceSurface('chat')}><MessageSquare size={17}/><span>Ask {agent.domain} Analyst</span></button>
       {agentId==='financial'&&<button type="button" className={`os-nav ${showReports?'active':''}`} onClick={()=>setFinanceSurface('reports')}><FileText size={17}/><span>Reports</span></button>}
-      {agentId==='financial'&&<button type="button" className={`os-nav ${showScorecard?'active':''}`} onClick={()=>setFinanceSurface('scorecard')}><ClipboardList size={17}/><span>Sep 24 Scorecard</span></button>}
+      {agentId==='financial'&&<button type="button" className={`os-nav ${showScorecard?'active':''}`} onClick={()=>setFinanceSurface('scorecard')}><ClipboardList size={17}/><span>Scorecard</span></button>}
       <button type="button" className="os-nav"><Grid2X2 size={17}/><span>Dashboards</span></button>
       <button type="button" className="os-nav"><Bookmark size={17}/><span>Saved Analyses</span></button>
       <button type="button" className="os-nav"><Database size={17}/><span>Data Sources</span></button>
