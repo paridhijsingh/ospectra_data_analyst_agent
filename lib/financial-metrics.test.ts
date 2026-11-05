@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { answerFinancialQuestion, financialQuestions } from './financial-metrics';
+import { answerFinancialQuestion, financialTemplateQuestions } from './financial-metrics';
 
 const expectedById = {
   'collections-gap': { title: 'Collections are $184K below earned revenue', intent: 'variance_analysis', metricIds: ['earned_revenue', 'cash_collections', 'collection_gap'], chart: 'bar' },
@@ -30,10 +30,10 @@ const expectedById = {
 } as const;
 
 describe('exact financial questions', () => {
-  it.each(financialQuestions.map((question) => [question.id, question.prompt] as const))(
+  it.each(financialTemplateQuestions.map((question) => [question.id, question.prompt] as const))(
     'preserves the existing output for %s',
     (id, prompt) => {
-      const expected = expectedById[id];
+      const expected = expectedById[id as keyof typeof expectedById];
       for (const question of [prompt, id]) {
         const answer = answerFinancialQuestion(question);
         expect(answer.supported).toBe(true);
@@ -42,6 +42,7 @@ describe('exact financial questions', () => {
         expect(answer.intent).toBe(expected.intent);
         expect(answer.metricIds).toEqual([...expected.metricIds]);
         expect(answer.chart).toBe(expected.chart);
+        expect(answer.answerSource).toBe('static_template');
       }
     },
   );

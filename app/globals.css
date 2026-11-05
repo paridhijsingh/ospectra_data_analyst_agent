@@ -373,3 +373,43 @@ button.od-node { appearance:none; }
 .ex-card-followups { margin:0; padding-left:16px; display:grid; gap:4px; }
 .ex-card-followups span { color:#4e367f; font-weight:700; }
 .ex-card-limits { margin:10px 0 0; color:#918b9c; font-size:10px; line-height:1.35; }
+
+.os-reports { width:min(1100px,100%); margin:0 auto; padding:8px 0 40px; display:flex; flex-direction:column; gap:14px; }
+.os-reports-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.os-reports-head strong { font:650 16px Arial,Helvetica,sans-serif; color:#24202d; }
+.os-reports-head p { margin:4px 0 0; color:#767681; font-size:12px; }
+.os-reports-badge { padding:5px 9px; border:1px solid #cfc3f4; border-radius:999px; background:#f5f1ff; color:#613bd0; font-size:10px; white-space:nowrap; }
+.os-reports-list { display:flex; flex-wrap:wrap; gap:6px; }
+.os-reports-list button { height:34px; padding:0 12px; border:1px solid #e4def1; border-radius:8px; background:#fff; color:#4a4a55; font-size:12px; }
+.os-reports-list button.selected,.os-reports-list button:hover { border-color:#cfc3f4; background:#f5f1ff; color:#5a32d2; }
+.os-report-panel { padding:14px 16px 18px; border:1px solid #e5e3ea; border-radius:12px; background:#fff; box-shadow:0 1px 2px rgba(29,29,36,.04); }
+.os-report-panel header { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:10px; }
+.os-report-panel h3 { margin:0; font:650 15px Arial,Helvetica,sans-serif; }
+.os-report-panel h4 { margin:14px 0 8px; font:650 12px Arial,Helvetica,sans-serif; color:#4e367f; }
+.os-report-panel small { color:#613bd0; font-size:10px; }
+.os-report-note { margin:0 0 10px; color:#57525e; font-size:12px; line-height:1.45; }
+.os-report-table-wrap { overflow:auto; border:1px solid #ebe7f2; border-radius:8px; }
+.os-report-table { width:100%; border-collapse:collapse; font-size:11px; }
+.os-report-table th,.os-report-table td { padding:7px 9px; border-bottom:1px solid #f0edf5; text-align:left; white-space:nowrap; }
+.os-report-table th { background:#faf8ff; color:#5f5c68; font-weight:700; }
+.os-report-table td { color:#2f2f38; }
+
+.os-scorecard { width:min(980px,100%); margin:0 auto; padding:8px 0 40px; display:flex; flex-direction:column; gap:16px; }
+.os-scorecard-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.os-scorecard-head strong { font:650 16px Arial,Helvetica,sans-serif; color:#24202d; }
+.os-scorecard-head p { margin:4px 0 0; color:#767681; font-size:12px; line-height:1.4; }
+.os-scorecard-badge,.os-scorecard-header-line { padding:5px 9px; border:1px solid #cfc3f4; border-radius:999px; background:#f5f1ff; color:#613bd0; font-size:10px; }
+.os-scorecard-header-line { margin:0; width:max-content; }
+.os-scorecard-section { padding:14px 16px; border:1px solid #e5e3ea; border-radius:12px; background:#fff; }
+.os-scorecard-section h3 { margin:0 0 10px; font:650 13px Arial,Helvetica,sans-serif; color:#4e367f; }
+.os-scorecard-list,.os-scorecard-open { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px; }
+.os-scorecard-row { display:grid; grid-template-columns:44px minmax(0,1fr) auto; gap:10px; align-items:center; padding:10px 11px; border:1px solid #ebe7f2; border-radius:9px; background:#faf8ff; }
+.os-scorecard-code { color:#5a32d2; font-size:11px; font-weight:700; }
+.os-scorecard-body { display:flex; flex-direction:column; gap:5px; min-width:0; }
+.os-scorecard-body strong { color:#24202d; font-size:12px; font-weight:650; line-height:1.35; }
+.os-scorecard-chip { width:max-content; padding:3px 7px; border:1px solid #d7d0ea; border-radius:999px; background:#fff; color:#5f5c68; font-size:9px; }
+.os-scorecard-link { height:30px; padding:0 10px; border:1px solid #cfc3f4; border-radius:8px; background:#fff; color:#5a32d2; font-size:11px; white-space:nowrap; }
+.os-scorecard-link:hover { background:#f0ebff; }
+.os-scorecard-open { list-style:decimal; padding-left:18px; gap:10px; }
+.os-scorecard-open li { display:flex; flex-direction:column; gap:3px; color:#57525e; font-size:12px; line-height:1.4; }
+.os-scorecard-open strong { color:#24202d; font-size:12px; }

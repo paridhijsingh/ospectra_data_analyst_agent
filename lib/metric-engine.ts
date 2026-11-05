@@ -3,10 +3,23 @@ import { applications, monthKeys, monthLabels, stageOrder } from './recruitment-
 
 export type ChartDatum = { label: string; shortLabel: string; value: number; displayValue: string };
 export type ChartType = 'bar' | 'funnel' | 'line' | 'donut';
+/** Origin of a rendered answer — drives honesty labels in the orchestrator / UI. */
+export type AnswerSource = 'governed' | 'static_template' | 'synthetic_computed';
+export type ExplainerFollowUpSlots = {
+  drillDown: string;
+  drillUp: string;
+  drillAcross: string;
+};
 export type RecruitmentAnswer = {
   supported: boolean; questionId: string; title: string; summary: string; insight: string;
   data: ChartDatum[]; chart: ChartType; chartDescription: string; unit: 'count' | 'days' | 'percent';
   metricLabel: string; metricIds: string[]; definition: string; sources: string[]; intent: string; queryPlan: string;
+  /** Defaults to governed for recruitment; finance templates / compute set explicitly. */
+  answerSource?: AnswerSource;
+  comparativeInsight?: string;
+  nextAction?: string;
+  followUps?: ExplainerFollowUpSlots;
+  limitations?: readonly string[];
 };
 
 export const questions = [

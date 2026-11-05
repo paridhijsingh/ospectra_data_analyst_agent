@@ -1,7 +1,8 @@
+import { financialComputeAnswerBuilders } from './financial-compute-answers';
 import { matchFinancialIntent } from './financial-intent-registry';
 import type { RecruitmentAnswer } from './metric-engine';
 
-export const financialQuestions = [
+export const financialTemplateQuestions = [
   { id:'collections-gap', prompt:'Why is cash collection lagging behind earned revenue this month?' },
   { id:'cash-forecast', prompt:'What is the projected cash position over the next 30–60 days based on outstanding claims?' },
   { id:'payer-delays', prompt:'Which payers have the longest payment delays between claim submission and cash receipt?' },
@@ -29,9 +30,30 @@ export const financialQuestions = [
   { id:'cash-by-branch', prompt:'What is the current cash position by branch?' },
 ] as const;
 
+export const financialComputeQuestions = [
+  { id:'break-even', prompt:'Have we reached break-even, and when do we get there?' },
+  { id:'debt-service', prompt:'How much does our debt cost us to service, and what does it do to profit?' },
+  { id:'debt-trend', prompt:'Is our debt growing?' },
+  { id:'cash-flow-problem', prompt:'Do we have a genuine cash-flow problem?' },
+  { id:'cost-per-member', prompt:'What does service cost per member per month?' },
+  { id:'caregiver-utilization', prompt:"How well are we using caregivers' available time?" },
+  { id:'waitlist-revenue', prompt:'How much revenue are we leaving unserved on the waitlist?' },
+  { id:'revenue-per-member-caregiver', prompt:'What revenue do we make per member and per caregiver each month?' },
+  { id:'service-line-profitability', prompt:'Is every service line profitable?' },
+  { id:'ratios-and-churn', prompt:'What are our key ratios and churn?' },
+] as const;
+
+export const financialQuestions = [
+  ...financialTemplateQuestions,
+  ...financialComputeQuestions,
+] as const;
+
 type Datum={label:string;value:number;displayValue:string;shortLabel:string};
 const data=(rows:Array<[string,number,string]>):Datum[]=>rows.map(([label,value,displayValue])=>({label,value,displayValue,shortLabel:label.length>15?`${label.slice(0,13)}…`:label}));
-const template=(value:Omit<RecruitmentAnswer,'questionId'>)=>value;
+const template=(value:Omit<RecruitmentAnswer,'questionId'|'answerSource'>):Omit<RecruitmentAnswer,'questionId'>=>({
+  ...value,
+  answerSource:'static_template',
+});
 
 const templates:Record<string,Omit<RecruitmentAnswer,'questionId'>>={
   collections:template({ supported:true,title:'Collections are $184K below earned revenue',summary:'Earned revenue held steady, but payer timing, denials, and billing-release delays reduced posted cash.',insight:'Payment timing explains $91K of the gap; denied and unbilled claims account for most of the remainder.',data:data([['Earned revenue',1438,'$1.44M'],['Cash collections',1254,'$1.25M'],['Prior month',1381,'$1.38M'],['90-day average',1342,'$1.34M']]),chart:'bar',chartDescription:'Earned revenue and cash collection comparison.',unit:'count',metricLabel:'Revenue / collections ($K)',metricIds:['earned_revenue','cash_collections','collection_gap'],definition:'Earned revenue less posted cash collections for the period.',sources:['general_ledger','claims','payments','remittance'],intent:'variance_analysis',queryPlan:'earned_revenue - cash_collections · current month' }),
@@ -64,10 +86,17 @@ const unsupportedFinancialAnswer: RecruitmentAnswer = {
   sources: [],
   intent: 'unsupported',
   queryPlan: 'BLOCKED',
+  answerSource: 'static_template',
 };
 
 export function answerFinancialQuestion(question:string):RecruitmentAnswer {
   const matched=matchFinancialIntent(question);
   if(!matched)return unsupportedFinancialAnswer;
+  if(matched.answerKind==='synthetic_computed'&&matched.computeKey){
+    const builder=financialComputeAnswerBuilders[matched.computeKey];
+    if(!builder)return unsupportedFinancialAnswer;
+    return {...builder(),questionId:matched.id};
+  }
+  if(!matched.templateKey)return unsupportedFinancialAnswer;
   return {...templates[matched.templateKey],questionId:matched.id};
 }

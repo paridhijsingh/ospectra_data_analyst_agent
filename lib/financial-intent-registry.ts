@@ -29,7 +29,17 @@ export type FinancialQuestionId =
   | 'cash-by-branch'
   | 'workflow-cost'
   | 'rcm-bottleneck'
-  | 'combined-exposure';
+  | 'combined-exposure'
+  | 'break-even'
+  | 'debt-service'
+  | 'debt-trend'
+  | 'cash-flow-problem'
+  | 'cost-per-member'
+  | 'caregiver-utilization'
+  | 'waitlist-revenue'
+  | 'revenue-per-member-caregiver'
+  | 'service-line-profitability'
+  | 'ratios-and-churn';
 
 export type FinancialTemplateKey =
   | 'collections'
@@ -45,6 +55,18 @@ export type FinancialTemplateKey =
   | 'workflow'
   | 'exposure';
 
+export type FinancialComputeKey =
+  | 'break-even'
+  | 'debt-service'
+  | 'debt-trend'
+  | 'cash-flow-problem'
+  | 'cost-per-member'
+  | 'caregiver-utilization'
+  | 'waitlist-revenue'
+  | 'revenue-per-member-caregiver'
+  | 'service-line-profitability'
+  | 'ratios-and-churn';
+
 export type FinancialTerminology = {
   allOf: readonly string[];
   match: 'exact' | 'includes';
@@ -55,7 +77,9 @@ export type FinancialIntentEntry = {
   id: FinancialQuestionId;
   intent: string;
   metricIds: readonly string[];
-  templateKey: FinancialTemplateKey;
+  answerKind: 'static_template' | 'synthetic_computed';
+  templateKey?: FinancialTemplateKey;
+  computeKey?: FinancialComputeKey;
   acceptedTerminology: readonly FinancialTerminology[];
 };
 
@@ -80,6 +104,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'collections-gap',
     intent: 'variance_analysis',
     metricIds: collectionsMetrics,
+    answerKind: 'static_template',
     templateKey: 'collections',
     acceptedTerminology: [
       exact('collections-gap'),
@@ -90,6 +115,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'insurance-bridge',
     intent: 'variance_analysis',
     metricIds: collectionsMetrics,
+    answerKind: 'static_template',
     templateKey: 'collections',
     acceptedTerminology: [
       exact('insurance-bridge'),
@@ -100,6 +126,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'cash-forecast',
     intent: 'forecast',
     metricIds: forecastMetrics,
+    answerKind: 'static_template',
     templateKey: 'forecast',
     acceptedTerminology: [
       exact('cash-forecast'),
@@ -114,6 +141,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'denial-scenario',
     intent: 'forecast',
     metricIds: forecastMetrics,
+    answerKind: 'static_template',
     templateKey: 'forecast',
     acceptedTerminology: [
       exact('denial-scenario'),
@@ -125,6 +153,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'auth-scenario',
     intent: 'forecast',
     metricIds: forecastMetrics,
+    answerKind: 'static_template',
     templateKey: 'forecast',
     acceptedTerminology: [
       exact('auth-scenario'),
@@ -136,6 +165,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'payer-delays',
     intent: 'payer_analysis',
     metricIds: payerMetrics,
+    answerKind: 'static_template',
     templateKey: 'payer',
     acceptedTerminology: [
       exact('payer-delays'),
@@ -148,6 +178,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'reimbursement',
     intent: 'payer_analysis',
     metricIds: payerMetrics,
+    answerKind: 'static_template',
     templateKey: 'payer',
     acceptedTerminology: [
       exact('reimbursement'),
@@ -158,6 +189,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'denied-exposure',
     intent: 'root_cause_analysis',
     metricIds: claimsMetrics,
+    answerKind: 'static_template',
     templateKey: 'claims',
     acceptedTerminology: [
       exact('denied-exposure'),
@@ -168,6 +200,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'claim-status',
     intent: 'root_cause_analysis',
     metricIds: claimsMetrics,
+    answerKind: 'static_template',
     templateKey: 'claims',
     acceptedTerminology: [
       exact('claim-status'),
@@ -178,6 +211,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'recovery',
     intent: 'root_cause_analysis',
     metricIds: claimsMetrics,
+    answerKind: 'static_template',
     templateKey: 'claims',
     acceptedTerminology: [
       exact('recovery'),
@@ -188,6 +222,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'ar-risk',
     intent: 'aging_analysis',
     metricIds: arMetrics,
+    answerKind: 'static_template',
     templateKey: 'ar',
     acceptedTerminology: [
       exact('ar-risk'),
@@ -200,6 +235,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'ar-lineage',
     intent: 'aging_analysis',
     metricIds: arMetrics,
+    answerKind: 'static_template',
     templateKey: 'ar',
     acceptedTerminology: [
       exact('ar-lineage'),
@@ -210,6 +246,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'unauthorized-care',
     intent: 'exposure_analysis',
     metricIds: authorizationMetrics,
+    answerKind: 'static_template',
     templateKey: 'authorization',
     acceptedTerminology: [
       exact('unauthorized-care'),
@@ -220,6 +257,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'unused-auth',
     intent: 'exposure_analysis',
     metricIds: authorizationMetrics,
+    answerKind: 'static_template',
     templateKey: 'authorization',
     acceptedTerminology: [
       exact('unused-auth'),
@@ -230,6 +268,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'expiring-auth',
     intent: 'exposure_analysis',
     metricIds: authorizationMetrics,
+    answerKind: 'static_template',
     templateKey: 'authorization',
     acceptedTerminology: [
       exact('expiring-auth'),
@@ -240,6 +279,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'unbilled-visits',
     intent: 'root_cause_analysis',
     metricIds: visitsMetrics,
+    answerKind: 'static_template',
     templateKey: 'visits',
     acceptedTerminology: [
       exact('unbilled-visits'),
@@ -252,6 +292,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'evv-delays',
     intent: 'root_cause_analysis',
     metricIds: visitsMetrics,
+    answerKind: 'static_template',
     templateKey: 'visits',
     acceptedTerminology: [
       exact('evv-delays'),
@@ -262,6 +303,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'budget',
     intent: 'variance_analysis',
     metricIds: budgetMetrics,
+    answerKind: 'static_template',
     templateKey: 'budget',
     acceptedTerminology: [
       exact('budget'),
@@ -274,6 +316,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'division-risk',
     intent: 'variance_analysis',
     metricIds: budgetMetrics,
+    answerKind: 'static_template',
     templateKey: 'budget',
     acceptedTerminology: [
       exact('division-risk'),
@@ -284,6 +327,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'margin',
     intent: 'margin_analysis',
     metricIds: marginMetrics,
+    answerKind: 'static_template',
     templateKey: 'margin',
     acceptedTerminology: [
       exact('margin'),
@@ -294,6 +338,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'cash-coverage',
     intent: 'cash_analysis',
     metricIds: cashMetrics,
+    answerKind: 'static_template',
     templateKey: 'cash',
     acceptedTerminology: [
       exact('cash-coverage'),
@@ -304,6 +349,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'cash-by-branch',
     intent: 'cash_analysis',
     metricIds: cashMetrics,
+    answerKind: 'static_template',
     templateKey: 'cash',
     acceptedTerminology: [
       exact('cash-by-branch'),
@@ -315,6 +361,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'workflow-cost',
     intent: 'cost_analysis',
     metricIds: workflowMetrics,
+    answerKind: 'static_template',
     templateKey: 'workflow',
     acceptedTerminology: [
       exact('workflow-cost'),
@@ -326,6 +373,7 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'rcm-bottleneck',
     intent: 'cost_analysis',
     metricIds: workflowMetrics,
+    answerKind: 'static_template',
     templateKey: 'workflow',
     acceptedTerminology: [
       exact('rcm-bottleneck'),
@@ -336,10 +384,154 @@ export const financialIntentRegistry: readonly FinancialIntentEntry[] = [
     id: 'combined-exposure',
     intent: 'exposure_analysis',
     metricIds: exposureMetrics,
+    answerKind: 'static_template',
     templateKey: 'exposure',
     acceptedTerminology: [
       exact('combined-exposure'),
       exact('what is the combined exposure from unbilled visits, denials, unused authorizations, and underpayments?'),
+    ],
+  },
+  {
+    id: 'break-even',
+    intent: 'forecast',
+    metricIds: ['operating_profit', 'forecast_break_even'],
+    answerKind: 'synthetic_computed',
+    computeKey: 'break-even',
+    acceptedTerminology: [
+      exact('break-even'),
+      exact('have we reached break-even, and when do we get there?'),
+      includes(1, 'break-even'),
+      includes(1, 'break even'),
+      includes(2, 'reached', 'profitable'),
+    ],
+  },
+  {
+    id: 'debt-service',
+    intent: 'cost_analysis',
+    metricIds: ['debt_service', 'interest_expense'],
+    answerKind: 'synthetic_computed',
+    computeKey: 'debt-service',
+    acceptedTerminology: [
+      exact('debt-service'),
+      exact('how much does our debt cost us to service, and what does it do to profit?'),
+      includes(1, 'debt', 'service'),
+      includes(1, 'debt', 'interest', 'profit'),
+      includes(2, 'cost', 'service', 'debt'),
+    ],
+  },
+  {
+    id: 'debt-trend',
+    intent: 'time_trend',
+    metricIds: ['debt_closing_balance'],
+    answerKind: 'synthetic_computed',
+    computeKey: 'debt-trend',
+    acceptedTerminology: [
+      exact('debt-trend'),
+      exact('is our debt growing?'),
+      includes(1, 'debt', 'growing'),
+      includes(1, 'debt', 'grow'),
+      includes(1, 'debt', 'trend'),
+      includes(1, 'debt', 'balance', 'change'),
+    ],
+  },
+  {
+    id: 'cash-flow-problem',
+    intent: 'cash_analysis',
+    metricIds: ['net_cash_flow', 'open_ar'],
+    answerKind: 'synthetic_computed',
+    computeKey: 'cash-flow-problem',
+    acceptedTerminology: [
+      exact('cash-flow-problem'),
+      exact('do we have a genuine cash-flow problem?'),
+      includes(1, 'genuine', 'cash-flow'),
+      includes(1, 'genuine', 'cash flow'),
+      includes(1, 'cash-flow', 'problem'),
+      includes(1, 'cash flow', 'problem'),
+    ],
+  },
+  {
+    id: 'cost-per-member',
+    intent: 'cost_analysis',
+    metricIds: ['cost_per_member_month'],
+    answerKind: 'synthetic_computed',
+    computeKey: 'cost-per-member',
+    acceptedTerminology: [
+      exact('cost-per-member'),
+      exact('what does service cost per member per month?'),
+      includes(1, 'cost', 'per member'),
+      includes(1, 'cost', 'member', 'month'),
+      includes(2, 'service cost', 'member'),
+    ],
+  },
+  {
+    id: 'caregiver-utilization',
+    intent: 'rate_breakdown',
+    metricIds: ['caregiver_utilization'],
+    answerKind: 'synthetic_computed',
+    computeKey: 'caregiver-utilization',
+    acceptedTerminology: [
+      exact('caregiver-utilization'),
+      exact("how well are we using caregivers' available time?"),
+      exact('how well are we using caregivers available time?'),
+      includes(1, 'caregiver', 'utilization'),
+      includes(1, 'caregivers', 'available', 'time'),
+      includes(2, 'using', 'caregiver'),
+    ],
+  },
+  {
+    id: 'waitlist-revenue',
+    intent: 'exposure_analysis',
+    metricIds: ['unrealized_waitlist_revenue'],
+    answerKind: 'synthetic_computed',
+    computeKey: 'waitlist-revenue',
+    acceptedTerminology: [
+      exact('waitlist-revenue'),
+      exact('how much revenue are we leaving unserved on the waitlist?'),
+      includes(1, 'waitlist', 'revenue'),
+      includes(1, 'unserved', 'waitlist'),
+      includes(1, 'unrealized', 'waitlist'),
+    ],
+  },
+  {
+    id: 'revenue-per-member-caregiver',
+    intent: 'metric_breakdown',
+    metricIds: ['revenue_per_member', 'revenue_per_caregiver'],
+    answerKind: 'synthetic_computed',
+    computeKey: 'revenue-per-member-caregiver',
+    acceptedTerminology: [
+      exact('revenue-per-member-caregiver'),
+      exact('what revenue do we make per member and per caregiver each month?'),
+      includes(1, 'revenue', 'per member', 'caregiver'),
+      includes(1, 'revenue', 'per caregiver'),
+      includes(2, 'per member', 'per caregiver'),
+    ],
+  },
+  {
+    id: 'service-line-profitability',
+    intent: 'margin_analysis',
+    metricIds: ['service_line_margin'],
+    answerKind: 'synthetic_computed',
+    computeKey: 'service-line-profitability',
+    acceptedTerminology: [
+      exact('service-line-profitability'),
+      exact('is every service line profitable?'),
+      includes(1, 'service line', 'profitable'),
+      includes(1, 'service-line', 'profit'),
+      includes(2, 'every', 'service line'),
+    ],
+  },
+  {
+    id: 'ratios-and-churn',
+    intent: 'metric_breakdown',
+    metricIds: ['finance_ratios', 'member_churn', 'caregiver_churn'],
+    answerKind: 'synthetic_computed',
+    computeKey: 'ratios-and-churn',
+    acceptedTerminology: [
+      exact('ratios-and-churn'),
+      exact('what are our key ratios and churn?'),
+      includes(1, 'ratios', 'churn'),
+      includes(1, 'key ratios'),
+      includes(2, 'member', 'churn', 'caregiver'),
     ],
   },
 ];

@@ -42,6 +42,14 @@ const nextByIntent:Record<string,string>={
   unsupported:'Choose an approved question or add a governed metric definition first.',
 };
 
+/** Honesty label for the semantic step / lineage — split by answerSource. */
+export function semanticHonestyLabel(agentId: AgentId, answer: RecruitmentAnswer): string {
+  if (!answer.supported) return 'No approved metric matched the request.';
+  if (agentId === 'recruitment') return `Matched approved metric(s): ${answer.metricIds.join(', ')}.`;
+  if (answer.answerSource === 'synthetic_computed') return 'Synthetic dataset — computed, not governed';
+  return 'Static template — not computed, not governed';
+}
+
 export function runOrchestrator(agentId:AgentId,question:string):OrchestratedResult {
   const answer=agentId==='recruitment'?answerQuestion(question):answerFinancialQuestion(question);
   const status=answer.supported?'complete':'blocked';
@@ -51,16 +59,12 @@ export function runOrchestrator(agentId:AgentId,question:string):OrchestratedRes
     narrative:{
       whatHappened:answer.summary,
       whyItMatters:answer.insight||'The question is outside the approved semantic scope.',
-      businessImpact:impactByIntent[answer.intent]??'This result provides a governed signal for operational review.',
-      nextStep:nextByIntent[answer.intent]??'Review the supporting records and validate the decision with the metric owner.',
+      businessImpact:answer.comparativeInsight??impactByIntent[answer.intent]??'This result provides a governed signal for operational review.',
+      nextStep:answer.nextAction??nextByIntent[answer.intent]??'Review the supporting records and validate the decision with the metric owner.',
     },
     trace:[
       {id:'router',label:'Intent router',detail:`Routed to the ${domain} analyst and classified ${answer.intent.replaceAll('_',' ')}.`,status:'complete'},
-      {id:'semantic',label:'Semantic validator',detail:answer.supported
-        ?(agentId==='financial'
-          ?'Static template — not computed, not governed'
-          :`Matched approved metric(s): ${answer.metricIds.join(', ')}.`)
-        :'No approved metric matched the request.',status},
+      {id:'semantic',label:'Semantic validator',detail:semanticHonestyLabel(agentId,answer),status},
       {id:'executor',label:'Metric executor',detail:answer.supported?`Executed a read-only plan across ${answer.sources.length} synthetic source domains.`:'Execution stopped by policy.',status},
       {id:'quality',label:'Quality guard',detail:answer.supported?'Passed freshness, field-policy, denominator, and traceability checks.':'No result was released.',status},
       {id:'narrative',label:'Narrative composer',detail:answer.supported?'Assembled the finding, driver, impact, and recommended next investigation.':'Returned a governed boundary message.',status},
