@@ -1,60 +1,62 @@
 'use client';
 
-import { useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState } from 'react';
 import { CircleHelp, X } from 'lucide-react';
 import { financeOntology } from '@/lib/finance-ontology';
 import { ExplainerCard } from '@/components/explainers/ExplainerCard';
+import { OntologyGraphSvg } from '@/components/ontology-demo/OntologyGraphSvg';
 import {
   getCashCollectionsInvestigationPlan,
   getConceptMetricGroups,
 } from '@/lib/finance-ontology-demo';
 import { explainInvestigationPlan, explainOntologyGraph } from '@/lib/research-explainers';
 import {
-  clickableOntologyConcepts,
+  buildInvestigationPlan,
   getConceptInvestigationDetails,
   type ConceptInvestigationDetails,
+  type InvestigationPlan,
 } from '@/lib/finance-ontology-investigation';
+import { investigationPathHighlight } from '@/lib/ontology-graph-layout';
 
-const nodeLabels: Record<string, string> = {
+const GRAPH_LABELS: Readonly<Record<string, string>> = {
   CashCollections: 'Cash Collections',
+  AccountsReceivable: 'Accounts Receivable',
+  PayerRule: 'Payer Rule',
+  PayrollObligation: 'Payroll Obligation',
+  Authorization: 'Authorization',
   Payment: 'Payment',
   Claim: 'Claim',
-  Payer: 'Payer',
   Denial: 'Denial',
+  Appeal: 'Appeal',
+  Remittance: 'Remittance',
   Visit: 'Visit',
-  Authorization: 'Authorization',
   Service: 'Service',
+  Payer: 'Payer',
+  Branch: 'Branch',
+  Client: 'Client',
 };
 
-function ConceptNode({
-  conceptId,
-  className,
-  selected,
-  onSelect,
-  children,
-}: {
-  conceptId: (typeof clickableOntologyConcepts)[number];
-  className?: string;
-  selected: boolean;
-  onSelect: (id: (typeof clickableOntologyConcepts)[number]) => void;
-  children?: ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      className={`od-node ${className ?? ''} ${selected ? 'od-node-selected' : ''}`}
-      onClick={() => onSelect(conceptId)}
-      aria-pressed={selected}
-    >
-      {children ?? nodeLabels[conceptId]}
-    </button>
-  );
+type PlanOptionId = 'cash-collections-decline' | 'claim-not-paid';
+
+const PLAN_OPTIONS: readonly { id: PlanOptionId; label: string }[] = [
+  { id: 'cash-collections-decline', label: 'Why did cash collections fall?' },
+  { id: 'claim-not-paid', label: 'Why was this claim not paid?' },
+];
+
+function loadPlan(planId: PlanOptionId | null): InvestigationPlan {
+  if (planId === 'claim-not-paid') return buildInvestigationPlan('claim-not-paid');
+  return getCashCollectionsInvestigationPlan();
 }
 
 export function OntologyInvestigationDemo() {
-  const plan = useMemo(() => getCashCollectionsInvestigationPlan(), []);
+  const [selectedPlanId, setSelectedPlanId] = useState<PlanOptionId | null>(null);
+  const [selectedConcept, setSelectedConcept] = useState<string | null>(null);
+  const plan = useMemo(() => loadPlan(selectedPlanId ?? 'cash-collections-decline'), [selectedPlanId]);
+  const highlight = useMemo(
+    () => (selectedPlanId ? investigationPathHighlight(plan) : null),
+    [selectedPlanId, plan],
+  );
   const metricGroups = useMemo(() => getConceptMetricGroups(), []);
-  const [selectedConcept, setSelectedConcept] = useState<(typeof clickableOntologyConcepts)[number] | null>(null);
   const details: ConceptInvestigationDetails | null = selectedConcept
     ? getConceptInvestigationDetails(selectedConcept, plan)
     : null;
@@ -66,19 +68,23 @@ export function OntologyInvestigationDemo() {
           <span className="od-badge">Research prototype</span>
           <span className="od-research-note">Research use case — not an approved Financial Agent question</span>
         </div>
-        <h2>{plan.question}</h2>
-        <p>Use governed financial relationships to determine where the agent should investigate.</p>
+        <h2>{selectedPlanId ? plan.question : 'Financial ontology graph'}</h2>
+        <p>
+          {selectedPlanId
+            ? 'Highlighted path shows where the selected investigation plan walks the ontology.'
+            : 'Use governed financial relationships to determine where the agent should investigate.'}
+        </p>
       </section>
 
       <section className="od-panel od-graph-panel">
         <div className="od-panel-head">
           <strong>Financial domain ontology</strong>
-          <span>Concept map</span>
+          <span>Drawn graph</span>
         </div>
         <div className="od-legend od-legend-compact">
           <span>
             <b>Investigation</b>
-            Start at observed outcome and work upstream
+            Select a plan to highlight its path; clear selection to show the full graph
           </span>
           <span>
             <b>Ontology</b>
@@ -86,87 +92,33 @@ export function OntologyInvestigationDemo() {
           </span>
         </div>
 
-        <div
-          className="od-map"
-          role="img"
-          aria-label="Ontology concept map starting at Cash Collections, with Payment and Claim upstream, then Payer, Denial, and Visit branches"
-        >
-          <div className="od-map-stem">
-            <ConceptNode
-              conceptId="CashCollections"
-              className="od-node-root"
-              selected={selectedConcept === 'CashCollections'}
-              onSelect={setSelectedConcept}
+        <div className="od-plan-picker" role="group" aria-label="Investigation plan selection">
+          <button
+            type="button"
+            className={selectedPlanId === null ? 'active' : ''}
+            onClick={() => setSelectedPlanId(null)}
+          >
+            Full graph
+          </button>
+          {PLAN_OPTIONS.map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              className={selectedPlanId === option.id ? 'active' : ''}
+              onClick={() => setSelectedPlanId(option.id)}
             >
-              <em>Investigation starts here</em>
-              Cash Collections
-              <small>Observed outcome</small>
-            </ConceptNode>
-            <div className="od-connector">
-              <span>↑ contributes_to</span>
-              <i>Payment → Cash Collections</i>
-            </div>
-            <ConceptNode conceptId="Payment" selected={selectedConcept === 'Payment'} onSelect={setSelectedConcept} />
-            <div className="od-connector">
-              <span>↑ may_result_in</span>
-              <i>Claim → Payment</i>
-            </div>
-            <ConceptNode
-              conceptId="Claim"
-              className="od-node-hub"
-              selected={selectedConcept === 'Claim'}
-              onSelect={setSelectedConcept}
-            />
-          </div>
-
-          <div className="od-map-branches">
-            <div className="od-map-branch">
-              <div className="od-connector od-connector-down">
-                <span>↓ submitted_to</span>
-                <i>Claim → Payer</i>
-              </div>
-              <ConceptNode conceptId="Payer" selected={selectedConcept === 'Payer'} onSelect={setSelectedConcept} />
-            </div>
-            <div className="od-map-branch">
-              <div className="od-connector od-connector-down">
-                <span>↓ may_have</span>
-                <i>Claim → Denial</i>
-              </div>
-              <ConceptNode conceptId="Denial" selected={selectedConcept === 'Denial'} onSelect={setSelectedConcept} />
-            </div>
-            <div className="od-map-branch od-map-branch-visit">
-              <div className="od-connector">
-                <span>↑ generates</span>
-                <i>Visit → Claim</i>
-              </div>
-              <ConceptNode conceptId="Visit" selected={selectedConcept === 'Visit'} onSelect={setSelectedConcept} />
-              <div className="od-visit-fork">
-                <div>
-                  <div className="od-connector od-connector-down">
-                    <span>↓ covered_by</span>
-                    <i>Visit → Authorization</i>
-                  </div>
-                  <ConceptNode
-                    conceptId="Authorization"
-                    selected={selectedConcept === 'Authorization'}
-                    onSelect={setSelectedConcept}
-                  />
-                </div>
-                <div>
-                  <div className="od-connector">
-                    <span>↑ delivered_as</span>
-                    <i>Service → Visit</i>
-                  </div>
-                  <ConceptNode
-                    conceptId="Service"
-                    selected={selectedConcept === 'Service'}
-                    onSelect={setSelectedConcept}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+              {option.label}
+            </button>
+          ))}
         </div>
+
+        <OntologyGraphSvg
+          edges={financeOntology}
+          labels={GRAPH_LABELS}
+          highlight={highlight}
+          selectedConceptId={selectedConcept}
+          onSelectConcept={setSelectedConcept}
+        />
 
         <ExplainerCard explainer={explainOntologyGraph(plan)} />
 
@@ -199,7 +151,7 @@ export function OntologyInvestigationDemo() {
         )}
 
         <details className="od-details">
-          <summary>View ontology relationships</summary>
+          <summary>View ontology relationships (text fallback)</summary>
           <ul>
             {financeOntology.map((edge) => (
               <li key={`${edge.from}-${edge.relationship}-${edge.to}`}>
@@ -274,7 +226,7 @@ export function OntologyInvestigationDemo() {
         <div className="od-story-cards">
           {plan.steps.map((step) => (
             <div key={step.step} className="od-story-card">
-              <strong>{step.title.replace(/^Investigate |^Verify /, '')}</strong>
+              <strong>{step.title.replace(/^Investigate |^Verify |^Inspect /, '')}</strong>
               <span>→ {step.suggestedVisual}</span>
               <em>Placeholder — not a live chart</em>
             </div>
@@ -287,8 +239,8 @@ export function OntologyInvestigationDemo() {
         <strong>Insufficient evidence to assign a cause</strong>
         <p>
           The ontology identifies relevant investigation paths and the metric registry identifies what can be measured.
-          Actual evidence must be evaluated before attributing the decline to payment timing, denials, authorization
-          issues, or another factor.
+          Actual evidence must be evaluated before attributing an unpaid claim or collections decline to denials,
+          remittance posting, payer rules, or another factor.
         </p>
         <p className="od-path-note">{plan.conclusionMessage}</p>
       </section>
