@@ -1,11 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import { financeOntology } from './finance-ontology';
 import {
+  assertRelationshipRefsExist,
   buildInvestigationPlan,
   conceptMetricMap,
   knownGovernedMetricIds,
   relationshipExists,
+  type OntologyRelationshipRef,
 } from './finance-ontology-investigation';
+
+function isDirectedWalk(path: readonly OntologyRelationshipRef[]): boolean {
+  for (let index = 0; index < path.length - 1; index += 1) {
+    if (path[index].to !== path[index + 1].from) return false;
+  }
+  return true;
+}
 
 describe('buildInvestigationPlan cash-collections-decline', () => {
   const plan = buildInvestigationPlan('cash-collections-decline');
@@ -83,5 +92,72 @@ describe('buildInvestigationPlan unknown cases', () => {
   it('does not silently default unknown research cases', () => {
     expect(() => buildInvestigationPlan('ar-aging-increase')).toThrow(/Unsupported research investigation case/);
     expect(() => buildInvestigationPlan('cash-collections-decline')).not.toThrow();
+  });
+});
+
+describe('buildInvestigationPlan claim-not-paid', () => {
+  const plan = buildInvestigationPlan('claim-not-paid');
+
+  it('returns four ordered steps from the Claim observation', () => {
+    expect(plan.researchQuestionId).toBe('claim-not-paid');
+    expect(plan.observedConcept).toBe('Claim');
+    expect(plan.question).toBe('Why was this claim not paid?');
+    expect(plan.steps).toHaveLength(4);
+    expect(plan.steps.map((step) => step.step)).toEqual([1, 2, 3, 4]);
+    expect(plan.steps.map((step) => step.title)).toEqual([
+      'Inspect claim payment and denial outcomes',
+      'Investigate denial and appeal path',
+      'Investigate remittance posting to receivables',
+      'Investigate payer rules governing the claim',
+    ]);
+  });
+
+  it('only declares ontology relationships that exist in financeOntology', () => {
+    const refs = plan.steps.flatMap((step) => step.relationshipRefs);
+    expect(() => assertRelationshipRefsExist(refs)).not.toThrow();
+    for (const ref of refs) {
+      expect(relationshipExists(ref, financeOntology)).toBe(true);
+    }
+  });
+
+  it('walks Claim → Denial → Appeal over asserted edges', () => {
+    const denialAppealPath = plan.steps[1].relationshipRefs;
+    expect(denialAppealPath).toEqual([
+      { from: 'Claim', relationship: 'may_have', to: 'Denial' },
+      { from: 'Denial', relationship: 'may_be_appealed_via', to: 'Appeal' },
+    ]);
+    expect(isDirectedWalk(denialAppealPath)).toBe(true);
+  });
+
+  it('walks Claim → Remittance → AccountsReceivable over asserted edges', () => {
+    const remittancePath = plan.steps[2].relationshipRefs;
+    expect(remittancePath).toEqual([
+      { from: 'Claim', relationship: 'may_produce', to: 'Remittance' },
+      { from: 'Remittance', relationship: 'posts_to', to: 'AccountsReceivable' },
+    ]);
+    expect(isDirectedWalk(remittancePath)).toBe(true);
+  });
+
+  it('references only existing approved metric IDs', () => {
+    for (const metricId of plan.steps.flatMap((step) => step.metricIds)) {
+      expect(knownGovernedMetricIds).toContain(metricId);
+    }
+  });
+
+  it('maps new RCM concepts without inventing metric ids', () => {
+    expect(conceptMetricMap.Appeal).toEqual([]);
+    expect(conceptMetricMap.Remittance).toEqual([]);
+    expect(conceptMetricMap.PayerRule).toEqual([]);
+    expect(conceptMetricMap.PayrollObligation).toEqual([]);
+    expect(conceptMetricMap.AccountsReceivable).toEqual(['open_ar', 'ar_age']);
+  });
+
+  it('returns INSUFFICIENT_EVIDENCE and never authorizes a causal conclusion', () => {
+    expect(plan.conclusionState).toBe('INSUFFICIENT_EVIDENCE');
+    expect(plan.allowsCausalConclusion).toBe(false);
+    for (const step of plan.steps) {
+      expect(step.investigationStatus).toBe('INVESTIGATE');
+      expect(step.actualEvidenceState).toBe('MISSING_EVIDENCE');
+    }
   });
 });

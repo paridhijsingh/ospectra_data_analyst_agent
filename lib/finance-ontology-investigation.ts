@@ -56,6 +56,11 @@ export const conceptMetricMap: Readonly<Record<string, readonly string[]>> = {
   Denial: ['denial_rate', 'denied_claim_value'],
   Authorization: ['authorization_exposure'],
   Branch: [],
+  Appeal: [],
+  Remittance: [],
+  AccountsReceivable: ['open_ar', 'ar_age'],
+  PayerRule: [],
+  PayrollObligation: [],
 };
 
 export const knownGovernedMetricIds = [
@@ -135,8 +140,57 @@ const cashCollectionsDeclineCase: ResearchCaseDefinition = {
   ],
 };
 
+const claimNotPaidCase: ResearchCaseDefinition = {
+  id: 'claim-not-paid',
+  question: 'Why was this claim not paid?',
+  observedConcept: 'Claim',
+  steps: [
+    {
+      title: 'Inspect claim payment and denial outcomes',
+      conceptIds: ['Claim', 'Denial', 'Payment'],
+      metricIds: ['open_ar', 'ar_age', 'denial_rate', 'denied_claim_value', 'days_to_payment'],
+      suggestedVisual: 'Claim status table',
+      relationshipRefs: [
+        { from: 'Claim', relationship: 'may_have', to: 'Denial' },
+        { from: 'Claim', relationship: 'may_result_in', to: 'Payment' },
+      ],
+    },
+    {
+      title: 'Investigate denial and appeal path',
+      conceptIds: ['Claim', 'Denial', 'Appeal'],
+      metricIds: ['denial_rate', 'denied_claim_value'],
+      suggestedVisual: 'Denial / appeal exception table',
+      relationshipRefs: [
+        { from: 'Claim', relationship: 'may_have', to: 'Denial' },
+        { from: 'Denial', relationship: 'may_be_appealed_via', to: 'Appeal' },
+      ],
+    },
+    {
+      title: 'Investigate remittance posting to receivables',
+      conceptIds: ['Claim', 'Remittance', 'AccountsReceivable'],
+      metricIds: ['open_ar', 'ar_age'],
+      suggestedVisual: 'AR aging view or remittance table',
+      relationshipRefs: [
+        { from: 'Claim', relationship: 'may_produce', to: 'Remittance' },
+        { from: 'Remittance', relationship: 'posts_to', to: 'AccountsReceivable' },
+      ],
+    },
+    {
+      title: 'Investigate payer rules governing the claim',
+      conceptIds: ['Payer', 'PayerRule', 'Claim'],
+      metricIds: ['days_to_payment'],
+      suggestedVisual: 'Payer rule checklist',
+      relationshipRefs: [
+        { from: 'Payer', relationship: 'applies', to: 'PayerRule' },
+        { from: 'PayerRule', relationship: 'governs', to: 'Claim' },
+      ],
+    },
+  ],
+};
+
 const researchCases: Readonly<Record<string, ResearchCaseDefinition>> = {
   [cashCollectionsDeclineCase.id]: cashCollectionsDeclineCase,
+  [claimNotPaidCase.id]: claimNotPaidCase,
 };
 
 export function relationshipExists(ref: OntologyRelationshipRef, edges: readonly OntologyEdge[] = financeOntology): boolean {
@@ -225,6 +279,11 @@ const conceptDisplayNames: Record<string, string> = {
   Payer: 'Payer',
   Branch: 'Branch',
   Client: 'Client',
+  Appeal: 'Appeal',
+  Remittance: 'Remittance',
+  AccountsReceivable: 'Accounts Receivable',
+  PayerRule: 'Payer Rule',
+  PayrollObligation: 'Payroll Obligation',
 };
 
 const relevanceCopy: Record<string, string> = {
@@ -237,6 +296,11 @@ const relevanceCopy: Record<string, string> = {
   Service: 'Services are delivered as visits.',
   Payer: 'Claims are submitted to payers.',
   Branch: 'Claims may be associated with a branch, but no collections-by-branch metric is governed.',
+  Appeal: 'Denials may be appealed after a payer rejects a claim as submitted.',
+  Remittance: 'Claims may produce remittance advice that posts against receivables.',
+  AccountsReceivable: 'Remittances post to accounts receivable balances.',
+  PayerRule: 'Payers apply rules that govern how claims are adjudicated.',
+  PayrollObligation: 'Cash collections fund payroll obligations.',
 };
 
 export function getConceptInvestigationDetails(
