@@ -1,6 +1,7 @@
 import { financialComputeAnswerBuilders } from './financial-compute-answers';
 import { matchFinancialIntent } from './financial-intent-registry';
 import type { RecruitmentAnswer } from './metric-engine';
+import { findNearestFinanceConcept } from './nearest-concept';
 
 export const financialTemplateQuestions = [
   { id:'collections-gap', prompt:'Why is cash collection lagging behind earned revenue this month?' },
@@ -70,33 +71,37 @@ const templates:Record<string,Omit<RecruitmentAnswer,'questionId'>>={
   workflow:template({ supported:true,title:'Manual RCM work costs an estimated $286K monthly',summary:'Recorded staff effort and rework are concentrated in billing review and denial follow-up.',insight:'The best automation candidate combines high cost, repeated rules, and a measurable exception rate.',data:data([['Billing review',96,'$96K'],['Denial follow-up',82,'$82K'],['Documentation rework',64,'$64K'],['Authorization checks',27,'$27K'],['Supervision',17,'$17K']]),chart:'bar',chartDescription:'Manual workflow cost by process.',unit:'count',metricLabel:'Workflow cost ($K)',metricIds:['manual_workflow_cost'],definition:'Staff hours times loaded labor rate plus measured rework cost.',sources:['time_tracking','payroll','billing','denials'],intent:'cost_analysis',queryPlan:'staff_hours × loaded_rate + rework_cost · group by process' }),
 };
 
-const unsupportedFinancialAnswer: RecruitmentAnswer = {
-  supported: false,
-  questionId: 'unsupported',
-  title: 'Question is outside the governed financial analyses',
-  summary: '',
-  insight: '',
-  data: [],
-  chart: 'bar',
-  chartDescription: '',
-  unit: 'count',
-  metricLabel: '',
-  metricIds: [],
-  definition: '',
-  sources: [],
-  intent: 'unsupported',
-  queryPlan: 'BLOCKED',
-  answerSource: 'static_template',
-};
+function unsupportedFinancialAnswer(question: string): RecruitmentAnswer {
+  const nearest = findNearestFinanceConcept(question);
+  return {
+    supported: false,
+    questionId: 'unsupported',
+    title: 'Question is outside the governed financial analyses',
+    summary: '',
+    insight: '',
+    data: [],
+    chart: 'bar',
+    chartDescription: '',
+    unit: 'count',
+    metricLabel: '',
+    metricIds: [],
+    definition: '',
+    sources: [],
+    intent: 'unsupported',
+    queryPlan: 'BLOCKED',
+    answerSource: 'static_template',
+    ...(nearest ? { nearestConcept: nearest.label } : {}),
+  };
+}
 
 export function answerFinancialQuestion(question:string):RecruitmentAnswer {
   const matched=matchFinancialIntent(question);
-  if(!matched)return unsupportedFinancialAnswer;
+  if(!matched)return unsupportedFinancialAnswer(question);
   if(matched.answerKind==='synthetic_computed'&&matched.computeKey){
     const builder=financialComputeAnswerBuilders[matched.computeKey];
-    if(!builder)return unsupportedFinancialAnswer;
+    if(!builder)return unsupportedFinancialAnswer(question);
     return {...builder(),questionId:matched.id};
   }
-  if(!matched.templateKey)return unsupportedFinancialAnswer;
+  if(!matched.templateKey)return unsupportedFinancialAnswer(question);
   return {...templates[matched.templateKey],questionId:matched.id};
 }

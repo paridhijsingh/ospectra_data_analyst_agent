@@ -1,3 +1,4 @@
+import { findNearestRecruitmentConcept } from './nearest-concept';
 import { matchRecruitmentQuestion } from './recruitment-intent-registry';
 import { applications, monthKeys, monthLabels, stageOrder } from './recruitment-data';
 
@@ -20,6 +21,11 @@ export type RecruitmentAnswer = {
   nextAction?: string;
   followUps?: ExplainerFollowUpSlots;
   limitations?: readonly string[];
+  /**
+   * Display name of the nearest defined concept on BLOCKED refusals only.
+   * Never set on supported answers; never carries a value or partial computation.
+   */
+  nearestConcept?: string;
 };
 
 export const questions = [
@@ -124,5 +130,23 @@ const handlers:Record<string,()=>RecruitmentAnswer> = {
 export function answerQuestion(question:string):RecruitmentAnswer {
   const id=matchRecruitmentQuestion(question);
   if(id&&handlers[id])return handlers[id]();
-  return { supported:false, questionId:'unsupported', title:'Question is outside the governed POC', summary:`This proof of concept supports ${questions.length} approved recruitment questions. Choose one below so every number remains traceable.`, insight:'Add a new metric definition before enabling a new question.', data:[], chart:'bar', chartDescription:'', unit:'count', metricLabel:'', metricIds:[], definition:'', sources:[], intent:'unsupported', queryPlan:'BLOCKED by semantic policy' };
+  const nearest=findNearestRecruitmentConcept(question);
+  return {
+    supported:false,
+    questionId:'unsupported',
+    title:'Question is outside the governed POC',
+    summary:`This proof of concept supports ${questions.length} approved recruitment questions. Choose one below so every number remains traceable.`,
+    insight:'Add a new metric definition before enabling a new question.',
+    data:[],
+    chart:'bar',
+    chartDescription:'',
+    unit:'count',
+    metricLabel:'',
+    metricIds:[],
+    definition:'',
+    sources:[],
+    intent:'unsupported',
+    queryPlan:'BLOCKED by semantic policy',
+    ...(nearest?{nearestConcept:nearest.label}:{}),
+  };
 }
