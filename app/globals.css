@@ -69,6 +69,27 @@ button,input { font:inherit; } button { cursor:pointer; }
 .os-answer-feedback button { width:28px; height:28px; display:grid; place-items:center; border:1px solid #e5e3ea; border-radius:8px; background:#fff; color:#746b82; cursor:pointer; }
 .os-answer-feedback button:hover { border-color:#cfc3f4; color:#6d3df5; }
 .os-answer-feedback button.active { border-color:#6d3df5; background:#f0ebff; color:#6d3df5; }
+.os-metric-request { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
+.os-metric-request-action { display:flex; }
+.os-metric-request-trigger { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border:1px solid #cfc3f4; border-radius:8px; background:#f5f1ff; color:#5d34c9; font-size:11px; font-weight:650; cursor:pointer; }
+.os-metric-request-trigger:hover { border-color:#6d3df5; background:#efe9ff; }
+.os-workflow-prototype-chip { display:inline-flex; padding:3px 8px; border:1px solid #e0c9a8; border-radius:999px; background:#fff8ef; color:#9a6a2f; font-size:9px; font-weight:700; letter-spacing:.02em; white-space:nowrap; }
+.os-metric-request-dialog { width:min(560px,calc(100vw - 32px))!important; max-width:560px!important; max-height:min(86vh,720px); display:flex!important; flex-direction:column!important; gap:14px!important; padding:20px!important; border:1px solid #ded6ef!important; border-radius:16px!important; background:#fff!important; color:#292330!important; box-shadow:0 28px 90px rgba(33,24,63,.28)!important; overflow-y:auto; }
+.os-metric-request-dialog-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; }
+.os-metric-request-dialog [data-slot="dialog-title"] { color:#2e2247; font-size:17px; }
+.os-metric-request-dialog [data-slot="dialog-description"] { color:#7a7285; font-size:12px; line-height:1.45; }
+.os-metric-request-form { display:flex; flex-direction:column; gap:12px; }
+.os-metric-request-field { display:flex; flex-direction:column; gap:5px; }
+.os-metric-request-field label { color:#4d4458; font-size:11px; font-weight:650; }
+.os-metric-request-field textarea,.os-metric-request-field input { border:1px solid #e1dce9; border-radius:9px; background:#fff; color:#2f2c36; font-size:12px; }
+.os-metric-request-pending { padding:10px 11px; border:1px solid #e4deef; border-radius:10px; background:#fbfaff; }
+.os-metric-request-pending-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+.os-metric-request-pending-head>div { display:flex; align-items:center; gap:6px; color:#4f337f; font-size:11px; }
+.os-metric-request-pending ul { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; }
+.os-metric-request-pending li { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:8px 9px; border:1px solid #e8e3ef; border-radius:8px; background:#fff; }
+.os-metric-request-pending li strong { display:block; color:#34303b; font-size:11px; line-height:1.35; font-weight:650; }
+.os-metric-request-pending li small { display:block; margin-top:3px; color:#8a8490; font-size:10px; }
+.os-metric-request-status { flex:none; display:inline-flex; padding:3px 8px; border:1px solid #e0d6f0; border-radius:999px; background:#f5f1ff; color:#613bd0; font-size:9px; font-weight:700; }
 .os-metric-strip { margin-top:11px; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:10px 12px; border-radius:9px; background:#f0eff4; }
 .os-metric-strip>div { display:flex; flex-direction:column; gap:2px; } .os-metric-strip span { color:#777681; font-size:10px; } .os-metric-strip strong { font:650 18px Arial,Helvetica,sans-serif; }
 .os-metric-strip p { display:flex; align-items:center; gap:7px; margin:0; font-size:10px; } .os-metric-strip p i { width:6px; height:6px; border-radius:50%; background:currentColor; }
