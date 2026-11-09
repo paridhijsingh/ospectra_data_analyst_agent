@@ -2,16 +2,22 @@
 
 import { useMemo, useState } from 'react';
 import { ChevronDown, Grid2X2 } from 'lucide-react';
+import { ExplainerCard } from '@/components/explainers/ExplainerCard';
 import {
   buildDashboard,
   type DashboardCard,
 } from '@/lib/dashboard-catalog';
+import {
+  explainFinanceDashboard,
+  explainRecruitmentDashboard,
+} from '@/lib/dashboard-explainers';
 import type { AgentId } from '@/lib/orchestrator';
 
 type DashboardsViewProps = {
   agentId: AgentId;
   onSwitchAgent: (agentId: AgentId) => void;
   onOpenAsk: () => void;
+  onAskQuestion?: (agentId: AgentId, prompt: string) => void;
   onOpenReports?: () => void;
   onOpenScorecard?: () => void;
 };
@@ -60,11 +66,16 @@ export function DashboardsView({
   agentId,
   onSwitchAgent,
   onOpenAsk,
+  onAskQuestion,
   onOpenReports,
   onOpenScorecard,
 }: DashboardsViewProps) {
   const [supportingOpen, setSupportingOpen] = useState(false);
   const dashboard = useMemo(() => buildDashboard(agentId), [agentId]);
+  const explainer = useMemo(
+    () => (agentId === 'financial' ? explainFinanceDashboard() : explainRecruitmentDashboard()),
+    [agentId],
+  );
 
   return (
     <div className="os-dash">
@@ -101,6 +112,15 @@ export function DashboardsView({
           <DashboardCardView key={card.id} card={card} />
         ))}
       </div>
+
+      <ExplainerCard
+        explainer={explainer}
+        onAskNext={
+          onAskQuestion
+            ? (question) => onAskQuestion(agentId, question)
+            : undefined
+        }
+      />
 
       <section className="os-dash-supporting">
         <button

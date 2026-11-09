@@ -122,12 +122,39 @@ describe('explainer schema v2 action slots', () => {
     );
   });
 
+  it('fills missing E2 slots on the cash-timing timeline from lib dates and amounts', () => {
+    const result = compareCashTimingScenario(delayedReimbursementFixture);
+    const timeline = explainCashTimingTimeline(result, delayedReimbursementFixture);
+    assertActionSlotsBackfilled(timeline);
+    expect(timeline.comparativeInsight).toContain('Earned is not collected');
+    expect(timeline.whyItMatters).toContain('Earned is not collected');
+    expect(timeline.nextAction).toContain(formatUsd(result.scenarioShortfall));
+    expect(timeline.nextAction).toContain(delayedReimbursementFixture.obligationDate);
+    expect(timeline.followUps?.drillDown).toBe('Do we have a genuine cash-flow problem?');
+  });
+
   it('leaves the other explainers without the new optional slots', () => {
     const scenarios = getPaperRunRateScenarios();
     const plan = buildInvestigationPlan('cash-collections-decline');
-    assertActionSlotsAbsent(explainCashTimingTimeline(compareCashTimingScenario(delayedReimbursementFixture), delayedReimbursementFixture));
     assertActionSlotsAbsent(explainRevenueRunRateChart(scenarios));
     assertActionSlotsAbsent(explainCensusChart(scenarios));
     assertActionSlotsAbsent(explainInvestigationPlan(plan));
+  });
+
+  it('does not duplicate ExplainerCard builders for surfaces that already had E1+E2', () => {
+    // Ontology graph, cash comparison, and growth target already ship ExplainerCard + v2 slots.
+    assertActionSlotsBackfilled(
+      explainOntologyGraph(buildInvestigationPlan('cash-collections-decline')),
+    );
+    assertActionSlotsBackfilled(
+      explainCashTimingComparison(compareCashTimingScenario(delayedReimbursementFixture)),
+    );
+    assertActionSlotsBackfilled(
+      explainGrowthTargetChart(
+        getGrowthTargetScenarios(),
+        growthTargetReference.targetAnnualizedRunRate,
+        growthTargetReference.weeksPerYear,
+      ),
+    );
   });
 });

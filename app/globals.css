@@ -448,6 +448,9 @@ button.od-node { appearance:none; }
 .ex-card-next-action dd { color:#24202d; font-weight:650; }
 .ex-card-followups { margin:0; padding-left:16px; display:grid; gap:4px; }
 .ex-card-followups span { color:#4e367f; font-weight:700; }
+.ex-card-ask-chips { display:flex; flex-wrap:wrap; gap:7px; }
+.ex-card-ask-chips button { max-width:100%; padding:6px 10px; border:1px solid #cfc3f4; border-radius:8px; background:#f5f1ff; color:#5d34c9; font-size:11px; font-weight:650; text-align:left; line-height:1.35; cursor:pointer; }
+.ex-card-ask-chips button:hover { border-color:#6d3df5; background:#efe9ff; }
 .ex-card-limits { margin:10px 0 0; color:#918b9c; font-size:10px; line-height:1.35; }
 
 .os-reports { width:min(1100px,100%); margin:0 auto; padding:8px 0 40px; display:flex; flex-direction:column; gap:14px; }

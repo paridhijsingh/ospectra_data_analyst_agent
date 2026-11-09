@@ -69,6 +69,16 @@ export function explainCashTimingTimeline(
 ): GovernedExplainer {
   const delayed = input.reimbursements.find((receipt) => receipt.delayedByDays > 0);
   const delayedAmount = delayed ? formatCashUsd(delayed.amount) : formatCashUsd(Math.abs(result.timingDifference));
+  const obligationDate = input.obligationDate;
+  const delayedArrival = delayed
+    ? new Date(`${delayed.expectedDate}T00:00:00Z`)
+    : null;
+  if (delayedArrival && delayed) {
+    delayedArrival.setUTCDate(delayedArrival.getUTCDate() + delayed.delayedByDays);
+  }
+  const delayedArrivalLabel = delayedArrival
+    ? delayedArrival.toISOString().slice(0, 10)
+    : 'the delayed arrival date';
   return {
     id: 'cash-timing-timeline',
     title: 'Reimbursement timing relative to the obligation',
@@ -78,9 +88,18 @@ export function explainCashTimingTimeline(
     whatItShows:
       `Receipts on or before the obligation date count in cash before the obligation. Receipts after the cutoff do not. In this scenario, ${delayedAmount} moves past the cutoff, matching the timing difference of ${formatCashUsd(result.timingDifference)}.`,
     whyItMatters:
-      'The model includes a reimbursement in cash-before-obligation based only on its arrival date relative to the cutoff.',
+      'Earned is not collected — this graph shows when money arrives against when obligations fall due.',
     boundedConclusion:
       `Under these synthetic dates, cash available before the obligation falls by ${formatCashUsd(Math.abs(result.timingDifference))}. That amount is delayed, not lost revenue, and is not actual OSpectra cash.`,
+    comparativeInsight:
+      'Earned is not collected — this graph shows when money arrives against when obligations fall due.',
+    nextAction:
+      `Chase the delayed ${delayedAmount} so it arrives before ${obligationDate}; arriving on ${delayedArrivalLabel} leaves a ${formatCashUsd(result.scenarioShortfall)} shortfall against the ${formatCashUsd(input.obligationAmount)} obligation.`,
+    followUps: {
+      drillDown: 'Do we have a genuine cash-flow problem?',
+      drillUp: 'Have we reached break-even, and when do we get there?',
+      drillAcross: 'Is our debt growing?',
+    },
     limitations: [
       'Synthetic data',
       'Scenario, not prediction',
