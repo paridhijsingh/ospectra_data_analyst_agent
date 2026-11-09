@@ -151,6 +151,34 @@ button,input { font:inherit; } button { cursor:pointer; }
 @media (max-width:760px) { .os-sidebar { width:64px; padding-inline:9px; } .os-brand>div,.os-nav span,.os-sidebar-foot,.os-agent-switch>span,.os-agent-switch button strong,.os-agent-switch button svg:last-child { display:none; } .os-brand { padding:0; justify-content:center; } .os-agent-switch { margin-inline:0; } .os-agent-switch>button { justify-content:center; padding:0; } .os-nav { justify-content:center; padding:0; } .os-stage { width:calc(100% - 64px); margin-left:64px; } .os-role { display:none; } .os-main { padding:22px 16px 0; } .os-agent-row { width:100%; } .os-user-bubble { max-width:88%; } .os-question-grid { grid-template-columns:1fr; } .os-question-dialog { padding:17px!important; max-height:86vh; } }
 @media (max-width:520px) { .os-header { padding:0 12px; } .os-header-actions>button,.os-header-actions>i { display:none; } .os-header-title strong { font-size:13px; } .os-main { padding-inline:10px; } .os-suggestions { justify-content:flex-start; } .os-agent-avatar { display:none; } .os-answer-card { border-radius:12px; } .os-chart { height:230px; } .os-chart-donut { flex-direction:column; } .os-chart-donut>div:first-child,.os-chart-key { width:100%!important; } .os-orchestration-head { align-items:flex-start; flex-direction:column; } .os-process-flow { grid-template-columns:1fr; } }
 
+/* Dashboards (display-only) */
+.os-dash { display:flex; flex-direction:column; gap:14px; padding-bottom:28px; }
+.os-dash-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px; }
+.os-dash-title { display:flex; align-items:center; gap:8px; color:#4f337f; font-size:13px; }
+.os-dash-switch { display:inline-flex; padding:3px; border:1px solid #e1dceb; border-radius:10px; background:#f7f5fb; gap:3px; }
+.os-dash-switch button { padding:6px 11px; border:0; border-radius:8px; background:transparent; color:#6a6280; font-size:11px; font-weight:650; cursor:pointer; }
+.os-dash-switch button.active { background:#fff; color:#5d34c9; box-shadow:0 1px 2px rgba(29,29,36,.06); }
+.os-dash-goal { padding:14px 16px; border:1px solid #e4deef; border-radius:12px; background:linear-gradient(145deg,#fff,#faf8ff); }
+.os-dash-goal p { margin:0; color:#2e2247; font-size:15px; font-weight:650; line-height:1.4; }
+.os-dash-goal small { display:block; margin-top:6px; color:#7a7285; font-size:11px; }
+.os-dash-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.os-dash-card { display:flex; flex-direction:column; gap:8px; padding:14px; border:1px solid #e5e3ea; border-radius:12px; background:#fff; box-shadow:0 1px 2px rgba(29,29,36,.04); }
+.os-dash-card h3 { margin:0; color:#24202d; font:650 13px/1.35 Arial,Helvetica,sans-serif; }
+.os-dash-card-value { color:#2a2140; font:700 22px/1.1 Arial,Helvetica,sans-serif; letter-spacing:-.02em; }
+.os-dash-card-period { margin:0; color:#8a8490; font-size:10px; }
+.os-dash-card-foot { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-top:2px; color:#8a8490; font-size:10px; }
+.os-dash-card-foot button { padding:4px 0; border:0; background:transparent; color:#6339d4; font-size:10px; font-weight:650; cursor:pointer; }
+.os-dash-lineage { margin-top:4px; }
+.os-dash-supporting { border:1px solid #e4deef; border-radius:12px; background:#fbfaff; overflow:hidden; }
+.os-dash-supporting-trigger { width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 14px; border:0; background:transparent; color:#4f337f; font-size:12px; font-weight:650; cursor:pointer; }
+.os-dash-supporting-trigger svg[data-open="true"] { transform:rotate(180deg); }
+.os-dash-supporting-body { padding:0 14px 14px; }
+.os-dash-supporting-body p { margin:0 0 10px; color:#6a6280; font-size:12px; line-height:1.45; }
+.os-dash-supporting-links { display:flex; flex-wrap:wrap; gap:8px; }
+.os-dash-supporting-links button { padding:7px 11px; border:1px solid #cfc3f4; border-radius:8px; background:#f5f1ff; color:#5d34c9; font-size:11px; font-weight:650; cursor:pointer; }
+.os-dash-supporting-links button:hover { border-color:#6d3df5; background:#efe9ff; }
+@media (max-width:760px) { .os-dash-grid { grid-template-columns:1fr; } }
+
 /* Financial Ontology research demo */
 a.os-nav { text-decoration:none; }
 .od-main { width:min(1040px,100%); margin:0 auto; padding-bottom:36px; }
