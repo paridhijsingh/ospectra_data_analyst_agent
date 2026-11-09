@@ -48,6 +48,10 @@ button,input { font:inherit; } button { cursor:pointer; }
 .os-main { flex:1; min-height:0; padding:30px 40px 0; }
 .os-conversation { width:min(980px,100%); min-height:calc(100vh - 102px); margin:0 auto; display:flex; flex-direction:column; }
 .os-scope { display:flex; flex-wrap:wrap; gap:8px; padding-top:2px; } .os-scope span { border:1px solid #8b5cf6; color:#623bd0; border-radius:8px; padding:5px 11px; font-size:11px; background:#faf8ff; }
+.os-period-switch { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:3px; border:1px solid #e1dceb; border-radius:10px; background:#f7f5fb; }
+.os-period-switch>span { padding:0 6px; color:#7a7285; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+.os-period-switch button { padding:6px 11px; border:0; border-radius:8px; background:transparent; color:#6a6280; font-size:11px; font-weight:650; cursor:pointer; }
+.os-period-switch button.active { background:#fff; color:#5d34c9; box-shadow:0 1px 2px rgba(29,29,36,.06); }
 .os-import { width:max-content; margin-top:16px; display:flex; align-items:center; gap:6px; padding:5px 7px; border:0; background:transparent; color:#6035d3; font-size:11px; }
 .os-coverage { display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 0 6px; }
 .os-coverage span { padding:4px 8px; border:1px solid #e4def1; border-radius:999px; background:#fff; color:#746b82; font-size:9px; }

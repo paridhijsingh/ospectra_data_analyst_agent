@@ -1,5 +1,10 @@
 import { answerFinancialQuestion } from './financial-metrics';
-import { answerQuestion, type RecruitmentAnswer } from './metric-engine';
+import {
+  answerQuestion,
+  recruitmentPeriodLabel,
+  type RecruitmentAnswer,
+  type RecruitmentPeriod,
+} from './metric-engine';
 
 export type AgentId='recruitment'|'financial';
 export type ProcessStep={ id:string; label:string; detail:string; status:'complete'|'blocked' };
@@ -50,10 +55,27 @@ export function semanticHonestyLabel(agentId: AgentId, answer: RecruitmentAnswer
   return 'Static template — not computed, not governed';
 }
 
-export function runOrchestrator(agentId:AgentId,question:string):OrchestratedResult {
-  const answer=agentId==='recruitment'?answerQuestion(question):answerFinancialQuestion(question);
+export function runOrchestrator(
+  agentId:AgentId,
+  question:string,
+  period: RecruitmentPeriod = 'all',
+):OrchestratedResult {
+  const raw=agentId==='recruitment'?answerQuestion(question, period):answerFinancialQuestion(question);
+  const periodLabel=recruitmentPeriodLabel(period);
+  // Stamp selected period onto recruitment answers so lineage/trace is never silent.
+  const answer:RecruitmentAnswer=agentId==='recruitment'
+    ?{
+        ...raw,
+        period: raw.period ?? period,
+        periodLabel: raw.periodLabel ?? periodLabel,
+        periodApplied: raw.periodApplied ?? false,
+      }
+    :raw;
   const status=answer.supported?'complete':'blocked';
   const domain=agentId==='recruitment'?'Recruitment':'Finance';
+  const periodTrace=agentId==='recruitment'
+    ? ` Period ${answer.periodLabel}${answer.periodApplied?' (filter applied)':' (whole window — filter not yet applied to this question)'}.`
+    :'';
   return {
     answer,
     narrative:{
@@ -65,7 +87,7 @@ export function runOrchestrator(agentId:AgentId,question:string):OrchestratedRes
     trace:[
       {id:'router',label:'Intent router',detail:`Routed to the ${domain} analyst and classified ${answer.intent.replaceAll('_',' ')}.`,status:'complete'},
       {id:'semantic',label:'Semantic validator',detail:semanticHonestyLabel(agentId,answer),status},
-      {id:'executor',label:'Metric executor',detail:answer.supported?`Executed a read-only plan across ${answer.sources.length} synthetic source domains.`:'Execution stopped by policy.',status},
+      {id:'executor',label:'Metric executor',detail:answer.supported?`Executed a read-only plan across ${answer.sources.length} synthetic source domains.${periodTrace}`:'Execution stopped by policy.',status},
       {id:'quality',label:'Quality guard',detail:answer.supported?'Passed freshness, field-policy, denominator, and traceability checks.':'No result was released.',status},
       {id:'narrative',label:'Narrative composer',detail:answer.supported?'Assembled the finding, driver, impact, and recommended next investigation.':'Returned a governed boundary message.',status},
     ],

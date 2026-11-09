@@ -1,6 +1,15 @@
 import { findNearestRecruitmentConcept } from './nearest-concept';
 import { matchRecruitmentQuestion } from './recruitment-intent-registry';
 import { applications, monthKeys, monthLabels, stageOrder } from './recruitment-data';
+import {
+  applicationsForPeriod,
+  PERIOD_AWARE_QUESTION_ID,
+  recruitmentPeriodLabel,
+  type RecruitmentPeriod,
+} from './recruitment-period';
+
+export type { RecruitmentPeriod } from './recruitment-period';
+export { PERIOD_AWARE_QUESTION_ID, recruitmentPeriodLabel } from './recruitment-period';
 
 export type ChartDatum = { label: string; shortLabel: string; value: number; displayValue: string };
 export type ChartType = 'bar' | 'funnel' | 'line' | 'donut';
@@ -26,6 +35,12 @@ export type RecruitmentAnswer = {
    * Never set on supported answers; never carries a value or partial computation.
    */
   nearestConcept?: string;
+  /** Selected recruitment period when the executor applied (or stamped) a period filter. */
+  period?: RecruitmentPeriod;
+  /** Human-readable period for lineage / trace — never silent. */
+  periodLabel?: string;
+  /** True only when this answer's rows were filtered by the selected period. */
+  periodApplied?: boolean;
 };
 
 export const questions = [
@@ -76,9 +91,32 @@ function applicationsTrend(){
   return makeAnswer({ questionId:'applications-trend', title:`Applications grew ${growth}% in September`, summary:`Monthly volume rose from ${data[0].value} in April to ${data.at(-1)?.value} in September, with no month-over-month decline.`, insight:'The six-month pattern suggests sustained demand growth rather than a one-month campaign spike.', data, chart:'line', unit:'count', metricLabel:'Applications', metricIds:['application_count'], definition:'Distinct applications submitted per calendar month.', sources:['applications'], intent:'time_trend', queryPlan:'application_count · group by applied_month · Apr–Sep 2026' });
 }
 
-function candidatesBySource(){
-  const data=sortedData(groupCount(applications,(row)=>row.source));
-  return makeAnswer({ questionId:'candidates-by-source', title:`${data[0].label} is the largest candidate source`, summary:`${data[0].label} contributed ${data[0].value} candidates, followed by ${data[1].label} with ${data[1].value}.`, insight:'Volume is distributed across seven channels, reducing dependence on any single acquisition source.', data, chart:'donut', unit:'count', metricLabel:'Candidates', metricIds:['candidate_count'], definition:'Distinct candidates attributed to application source.', sources:['applications','candidates'], intent:'mix_analysis', queryPlan:'candidate_count · group by source · six months' });
+function candidatesBySource(period: RecruitmentPeriod = 'all'){
+  const scoped=applicationsForPeriod(period);
+  const data=sortedData(groupCount(scoped,(row)=>row.source));
+  const periodLabel=recruitmentPeriodLabel(period);
+  const windowNote=period==='all'?'six months':periodLabel;
+  return makeAnswer({
+    questionId:'candidates-by-source',
+    title:`${data[0].label} is the largest candidate source`,
+    summary:`${data[0].label} contributed ${data[0].value} candidates, followed by ${data[1].label} with ${data[1].value}.`,
+    insight:'Volume is distributed across seven channels, reducing dependence on any single acquisition source.',
+    data,
+    chart:'donut',
+    unit:'count',
+    metricLabel:'Candidates',
+    metricIds:['candidate_count'],
+    definition:'Distinct candidates attributed to application source.',
+    sources:['applications','candidates'],
+    intent:'mix_analysis',
+    queryPlan:period==='all'
+      ?'candidate_count · group by source · six months'
+      :`candidate_count · group by source · ${periodLabel}`,
+    period,
+    periodLabel,
+    periodApplied:true,
+    ...(period==='all'?{}:{ limitations:[`Period filter: ${windowNote} only — appliedAt month prefixes, no cross-quarter mixing.`] }),
+  });
 }
 
 function sourceHireRate(){
@@ -121,15 +159,29 @@ function pipelineHealth(){
   return makeAnswer({ questionId:'pipeline-health', title:`${data[0].label} has the healthiest active pipeline`, summary:`${data[0].displayValue} of ${data[0].label} applicants are in active stages compared with ${data.at(-1)?.displayValue} for ${data.at(-1)?.label}.`, insight:'This diagnostic balances pipeline depth against the department’s total applicant pool.', data, chart:'bar', unit:'percent', metricLabel:'Active pipeline share', metricIds:['active_pipeline_rate'], definition:'Active-stage candidates divided by all applications in the department.', sources:['applications','interviews','jobs'], intent:'rate_breakdown', queryPlan:'active_candidates / applications · group by department' });
 }
 
-const handlers:Record<string,()=>RecruitmentAnswer> = {
-  'applications-by-job':applicationsByJob,'time-to-hire':timeToHire,'engineering-funnel':engineeringFunnel,'applications-trend':applicationsTrend,
-  'candidates-by-source':candidatesBySource,'source-hire-rate':sourceHireRate,'hires-by-department':hiresByDepartment,'offer-acceptance':offerAcceptance,
-  'pipeline-by-location':pipelineByLocation,'department-demand':departmentDemand,'hiring-trend':hiringTrend,'pipeline-health':pipelineHealth,
+type AnswerHandler = (period?: RecruitmentPeriod) => RecruitmentAnswer;
+
+const handlers:Record<string,AnswerHandler> = {
+  'applications-by-job':()=>applicationsByJob(),
+  'time-to-hire':()=>timeToHire(),
+  'engineering-funnel':()=>engineeringFunnel(),
+  'applications-trend':()=>applicationsTrend(),
+  'candidates-by-source':(period='all')=>candidatesBySource(period),
+  'source-hire-rate':()=>sourceHireRate(),
+  'hires-by-department':()=>hiresByDepartment(),
+  'offer-acceptance':()=>offerAcceptance(),
+  'pipeline-by-location':()=>pipelineByLocation(),
+  'department-demand':()=>departmentDemand(),
+  'hiring-trend':()=>hiringTrend(),
+  'pipeline-health':()=>pipelineHealth(),
 };
 
-export function answerQuestion(question:string):RecruitmentAnswer {
+export function answerQuestion(question:string, period: RecruitmentPeriod = 'all'):RecruitmentAnswer {
   const id=matchRecruitmentQuestion(question);
-  if(id&&handlers[id])return handlers[id]();
+  if(id&&handlers[id]){
+    // Period filter is applied only for the proven period-aware question; others keep today's whole-window behaviour.
+    return id===PERIOD_AWARE_QUESTION_ID?handlers[id](period):handlers[id]();
+  }
   const nearest=findNearestRecruitmentConcept(question);
   return {
     supported:false,
